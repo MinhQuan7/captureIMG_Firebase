@@ -59,6 +59,20 @@
     <h1>Ảnh từ Camera</h1>
     <img id="cameraImage" src="https://firebasestorage.googleapis.com/v0/b/captureimage-38a12.appspot.com/o/unnamed.png?alt=media&token=de516284-f4be-47a9-8a1b-90a7cfe14e17" alt="Ảnh từ camera">
 
-    <button class="capture-button">Chụp Ảnh</button>
+    <button class="capture-button" onclick="captureImage()">Chụp Ảnh</button>
+
+    <script>
+        function captureImage() {
+            fetch('URL-TO-YOUR-PYTHON-SERVER')
+                .then(response => response.json())
+                .then(data => {
+                    // Giả định rằng server Python trả về URL công khai của ảnh mới
+                    document.getElementById('cameraImage').src = data.imageUrl;
+                })
+                .catch(error => {
+                    console.error('Lỗi khi tải ảnh mới:', error);
+                });
+        }
+    </script>
 </body>
 </html>
