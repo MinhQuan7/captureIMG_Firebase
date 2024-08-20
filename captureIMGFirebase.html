@@ -4,9 +4,61 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hiển thị Ảnh từ Firebase</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        #cameraImage {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            transition: transform 0.3s ease;
+        }
+
+        #cameraImage:hover {
+            transform: scale(1.05);
+        }
+
+        .capture-button {
+            display: inline-block;
+            padding: 15px 30px;
+            font-size: 18px;
+            font-weight: bold;
+            color: white;
+            background-color: #ff4757;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(255, 71, 87, 0.3);
+            transition: background-color 0.3s, box-shadow 0.3s;
+        }
+
+        .capture-button:hover {
+            background-color: #ff6b81;
+            box-shadow: 0 6px 15px rgba(255, 107, 129, 0.4);
+        }
+
+        .capture-button:active {
+            background-color: #e84118;
+            box-shadow: 0 4px 10px rgba(232, 65, 24, 0.3);
+        }
+    </style>
 </head>
 <body>
     <h1>Ảnh từ Camera</h1>
-    <img id="cameraImage" src="https://firebasestorage.googleapis.com/v0/b/captureimage-38a12.appspot.com/o/unnamed.png?alt=media&token=de516284-f4be-47a9-8a1b-90a7cfe14e17" alt="Ảnh từ camera" style="max-width: 100%; height: auto;">
+    <img id="cameraImage" src="https://firebasestorage.googleapis.com/v0/b/captureimage-38a12.appspot.com/o/unnamed.png?alt=media&token=de516284-f4be-47a9-8a1b-90a7cfe14e17" alt="Ảnh từ camera">
+
+    <button class="capture-button">Chụp Ảnh</button>
 </body>
 </html>
