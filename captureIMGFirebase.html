@@ -63,8 +63,9 @@
     <button class="capture-button" onclick="captureImage()">Chụp Ảnh</button>
 
     <script>
+        
         function captureImage() {
-            fetch('URL-TO-YOUR-PYTHON-SERVER')
+            fetch('URL-TO-YOUR-PYTHON-SERVERhttps://storage.googleapis.com/captureimage-38a12.appspot.com/images/camera_image.jpg')
                 .then(response => response.json())
                 .then(data => {
                     // Giả định rằng server Python trả về URL công khai của ảnh mới
