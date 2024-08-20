@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hiển thị Ảnh từ Firebase</title>
     <style>
-        
         body {
             font-family: Arial, sans-serif;
             text-align: center;
@@ -13,7 +12,6 @@
             margin: 0;
             padding: 20px;
         }
-
 
         h1 {
             color: #333;
@@ -31,6 +29,7 @@
         #cameraImage:hover {
             transform: scale(1.05);
         }
+
         .capture-button {
             display: inline-block;
             padding: 15px 30px;
@@ -58,23 +57,7 @@
 </head>
 <body>
     <h1>Ảnh từ Camera</h1>
-    <img id="cameraImage" src="https://firebasestorage.googleapis.com/v0/b/captureimage-38a12.appspot.com/o/unnamed.png?alt=media&token=de516284-f4be-47a9-8a1b-90a7cfe14e17" alt="Ảnh từ camera">
-
-    <button class="capture-button" onclick="captureImage()">Chụp Ảnh</button>
-
-    <script>
-        
-        function captureImage() {
-            fetch('URL-TO-YOUR-PYTHON-SERVERhttps://storage.googleapis.com/captureimage-38a12.appspot.com/images/camera_image.jpg')
-                .then(response => response.json())
-                .then(data => {
-                    // Giả định rằng server Python trả về URL công khai của ảnh mới
-                    document.getElementById('cameraImage').src = data.imageUrl;
-                })
-                .catch(error => {
-                    console.error('Lỗi khi tải ảnh mới:', error);
-                });
-        }
-    </script>
+    <img id="cameraImage" src="https://storage.googleapis.com/captureimage-38a12.appspot.com/images/camera_image.jpg" alt="Ảnh từ camera">
+    <button class="capture-button">Chụp Ảnh</button>
 </body>
 </html>
