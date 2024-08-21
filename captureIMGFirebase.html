@@ -58,25 +58,22 @@
 <body>
     <h1>Camera Image</h1>
     <img id="cameraImage" src="https://storage.googleapis.com/captureimage-38a12.appspot.com/images/camera_image.jpg?t=0" alt="Ảnh từ camera">
-    <button class="capture-button" id="captureButton">Take A Picture</button>
+    <button class="capture-button" id="captureButton">Chụp Ảnh</button>
 
     <script>
-        // Hàm cập nhật ảnh mới với URL mới
-        function updateImage() {
-            fetch('http://192.168.1.20:5000/capture')
-                .then(response => response.json())
-                .then(data => {
-                    const timestamp = new Date().getTime();
-                    const newImageUrl = data.imageUrl + '?t=' + timestamp;
-                    document.getElementById('cameraImage').src = newImageUrl;
-                })
-                .catch(error => {
-                    console.error('Lỗi khi lấy ảnh mới:', error);
-                });
-        }
-
         // Bắt sự kiện click vào nút "Chụp Ảnh"
-        document.getElementById('captureButton').addEventListener('click', updateImage);
+        document.getElementById('captureButton').addEventListener('click', function() {
+            // Mở một tab mới hoặc cửa sổ mới để truy cập vào URL để cập nhật ảnh trên Firebase
+            window.open('http://192.168.1.20:5000/capture', '_blank');
+
+            // Thêm một chút delay để đảm bảo ảnh đã được cập nhật trước khi tải lại
+            setTimeout(function() {
+                // Tạo URL mới với timestamp để tránh cache và cập nhật ảnh mới
+                const timestamp = new Date().getTime();
+                const newImageUrl = "https://storage.googleapis.com/captureimage-38a12.appspot.com/images/camera_image.jpg?t=" + timestamp;
+                document.getElementById('cameraImage').src = newImageUrl;
+            }, 2000);  // Chờ 2 giây trước khi tải lại ảnh
+        });
     </script>
 </body>
 </html>
