@@ -7,27 +7,29 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #0f172a;
+            background-color: #ffffff;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
             margin: 0;
+            background: radial-gradient(circle, #ff8c00, #00b3b3);
         }
 
         .container {
             display: flex;
-            width: 800px;
+            width: 1000px;
             border-radius: 20px;
             overflow: hidden;
-            background-color: #16222a;
-            box-shadow: 0 0 15px rgba(0, 255, 255, 0.2);
+            background-color: #ffffff;
+            box-shadow: 0 0 30px rgba(0, 179, 179, 0.4), 0 0 10px rgba(255, 140, 0, 0.6);
+            position: relative;
         }
 
         .camera-view {
-            flex: 3;
+            flex: 4;
             padding: 20px;
-            background-color: #111827;
+            background-color: #ffffff;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -37,51 +39,65 @@
             max-width: 100%;
             height: auto;
             border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
         }
 
         .side-panel {
             flex: 2;
             padding: 20px;
-            background: linear-gradient(135deg, #00c6ff, #0072ff);
+            background: linear-gradient(135deg, #00b3b3, #ff8c00);
             display: flex;
             flex-direction: column;
             justify-content: center;
-            align-items: center;
+            align-items: flex-start;
             color: white;
+            box-shadow: inset 0 0 15px rgba(255, 140, 0, 0.3);
         }
 
         .side-panel h2 {
             font-size: 24px;
             margin: 0;
+            margin-bottom: 20px;
+            text-align: center;
+            width: 100%;
         }
 
         .side-panel p {
             font-size: 18px;
-            margin: 10px 0;
+            margin: 5px 0;
         }
 
         .capture-button {
+            align-self: center;
             padding: 15px 30px;
             font-size: 18px;
             font-weight: bold;
             color: white;
-            background-color: #00c6ff;
+            background-color: #00b3b3;
             border: none;
             border-radius: 50px;
             cursor: pointer;
-            box-shadow: 0 4px 10px rgba(0, 198, 255, 0.3);
+            box-shadow: 0 4px 10px rgba(0, 179, 179, 0.3);
             transition: background-color 0.3s, box-shadow 0.3s;
             margin-top: 20px;
         }
 
         .capture-button:hover {
-            background-color: #00a3d8;
-            box-shadow: 0 6px 15px rgba(0, 198, 255, 0.4);
+            background-color: #008c8c;
+            box-shadow: 0 6px 15px rgba(0, 179, 179, 0.4);
         }
 
         .capture-button:active {
-            background-color: #0072ff;
-            box-shadow: 0 4px 10px rgba(0, 114, 255, 0.3);
+            background-color: #ff8c00;
+            box-shadow: 0 4px 10px rgba(255, 140, 0, 0.3);
+        }
+
+        .logo {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 100px;
+            height: auto;
         }
     </style>
 </head>
@@ -91,17 +107,20 @@
             <img id="cameraImage" src="https://storage.googleapis.com/captureimage-38a12.appspot.com/images/camera_image.jpg?t=0" alt="Ảnh từ camera">
         </div>
         <div class="side-panel">
-            <h2>LAST CAPTURED IMAGE</h2>
-            <p id="datetime">--:--:--</p>
+            <h2>CAMERA DETAILS</h2>
+            <p><strong>Hãng camera:</strong> IPCAM HKVISION</p>
+            <p><strong>Ngày tháng năm:</strong> <span id="datetime">--:--:--</span></p>
             <button class="capture-button" id="captureButton">Chụp Ảnh</button>
         </div>
+        <!-- Thêm logo của công ty -->
+        <img src="file:///mnt/data/unnamed.png" alt="Company Logo" class="logo">
     </div>
 
     <script>
         // Cập nhật thời gian hiện tại
         function updateDateTime() {
             const now = new Date();
-            const formattedDateTime = now.toLocaleTimeString('en-US', { hour12: false });
+            const formattedDateTime = now.toLocaleDateString('en-US') + ' ' + now.toLocaleTimeString('en-US', { hour12: false });
             document.getElementById('datetime').textContent = formattedDateTime;
         }
         setInterval(updateDateTime, 1000);
@@ -117,7 +136,7 @@
                 const timestamp = new Date().getTime();
                 const newImageUrl = "https://storage.googleapis.com/captureimage-38a12.appspot.com/images/camera_image.jpg?t=" + timestamp;
                 document.getElementById('cameraImage').src = newImageUrl;
-            }, 1000);  // Chờ 2 giây trước khi đóng tab và cập nhật ảnh
+            }, 2000);  // Chờ 2 giây trước khi đóng tab và cập nhật ảnh
         });
     </script>
 </body>
