@@ -3,7 +3,7 @@ import firebase_admin
 from firebase_admin import credentials, storage
 
 # Khởi tạo Firebase Admin SDK
-cred = credentials.Certificate("F:/EoH Company/Capture_Image_iFrame/firebase/codeCaptureIMG_Camera/captureimage-38a12-firebase-adminsdk-ngvh0-880c1349a3.json")
+cred = credentials.Certificate("F:/EoH Company/Capture_Image_iFrame/firebase/pythoncodeCaptureIMG_Camera/captureimage-38a12-firebase-adminsdk-ngvh0-0e871134fc.json")
 firebase_admin.initialize_app(cred, {
     'storageBucket': 'captureimage-38a12.appspot.com'  #projectID
 })

@@ -57,7 +57,21 @@
 <body>
     <h1>Camera Image</h1>
     <img id="cameraImage" src="https://storage.googleapis.com/captureimage-38a12.appspot.com/images/camera_image.jpg" alt="Ảnh từ camera">
-    <button class="capture-button">Chụp Ảnh</button>
-</body>
+    <button class="capture-button" onclick="captureImage()">Chụp Ảnh</button>
 
+    <script>
+        function captureImage() {
+            // Gửi yêu cầu đến server để lấy URL mới nhất
+            fetch('https://storage.googleapis.com/captureimage-38a12.appspot.com/images/camera_image.jpg') //must change URL
+                .then(response => response.json())
+                .then(data => {
+                    // Giả định rằng server trả về URL của ảnh mới nhất
+                    document.getElementById('cameraImage').src = data.imageUrl;
+                })
+                .catch(error => {
+                    console.error('Lỗi khi lấy ảnh mới:', error);
+                });
+        }
+    </script>
+</body>
 </html>
