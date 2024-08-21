@@ -113,7 +113,7 @@
             <button class="capture-button" id="captureButton">Chụp Ảnh</button>
         </div>
         <!-- Thêm logo của công ty -->
-        <img src="file:///mnt/data/unnamed.png" alt="Company Logo" class="logo">
+        <img src="C:\Users\lemin\Downloads\logoEoh.png" alt="Company Logo" class="logo">
     </div>
 
     <script>
@@ -125,7 +125,7 @@
         }
         setInterval(updateDateTime, 1000);
 
-        // Thêm sự kiện click cho nút "Chụp Ảnh"
+        //CLick Capture 
         document.getElementById('captureButton').addEventListener('click', function() {
             // Mở một tab mới để truy cập URL chụp ảnh
             var newWindow = window.open('http://192.168.1.20:5000/capture', '_blank');
