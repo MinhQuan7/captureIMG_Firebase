@@ -56,18 +56,94 @@
 </head>
 <body>
     <h1>Camera Image</h1>
-    <img id="cameraImage" src="https://storage.googleapis.com/captureimage-38a12.appspot.com/images/camera_image.jpg?t=0" alt="Ảnh từ camera">
+    <img id="cameraImage" src="https://storage.googleapis.com/captureimage-38a12.appspot.com/images/camera_image.jpg" alt="Ảnh từ camera">
     <button class="capture-button" onclick="captureImage()">Chụp Ảnh</button>
 
     <script>
         function captureImage() {
-            // Gửi yêu cầu đến server để chụp ảnh mới và trả về URL ảnh mới nhất
-            fetch('http://192.168.1.20:5000/capture')
+            // Gửi yêu cầu đến server để lấy URL mới nhất
+            fetch("https://storage.googleapis.com/captureimage-38a12.appspot.com/images/camera_image.jpg") //must change URL
                 .then(response => response.json())
                 .then(data => {
-                    // Cập nhật URL mới cho ảnh với timestamp để tránh cache
-                    const timestamp = new Date().getTime();
-                    document.getElementById('cameraImage').src = data.imageUrl + '?t=' + timestamp;
+                    // Giả định rằng server trả về URL của ảnh mới nhất
+                    document.getElementById('cameraImage').src = data.imageUrl;
+                })
+                .catch(error => {
+                    console.error('Lỗi khi lấy ảnh mới:', error);
+                });
+        }
+    </script>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Display Image from HikVision Camera</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #333;
+        }
+        #cameraImage {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            transition: transform 0.3s ease;
+        }
+
+        #cameraImage:hover {
+            transform: scale(1.05);
+        }
+
+        .capture-button {
+            display: inline-block;
+            padding: 15px 30px;
+            font-size: 18px;
+            font-weight: bold;
+            color: white;
+            background-color: #ff4757;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(255, 71, 87, 0.3);
+            transition: background-color 0.3s, box-shadow 0.3s;
+        }
+
+        .capture-button:hover {
+            background-color: #ff6b81;
+            box-shadow: 0 6px 15px rgba(255, 107, 129, 0.4);
+        }
+
+        .capture-button:active {
+            background-color: #e84118;
+            box-shadow: 0 4px 10px rgba(232, 65, 24, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <h1>Camera Image</h1>
+    <img id="cameraImage" src="https://storage.googleapis.com/captureimage-38a12.appspot.com/images/camera_image.jpg" alt="Ảnh từ camera">
+    <button class="capture-button" onclick="captureImage()">Chụp Ảnh</button>
+
+    <script>
+        function captureImage() {
+            // Gửi yêu cầu đến server để lấy URL mới nhất
+            fetch("https://storage.googleapis.com/captureimage-38a12.appspot.com/images/camera_image.jpg") //must change URL
+                .then(response => response.json())
+                .then(data => {
+                    // Giả định rằng server trả về URL của ảnh mới nhất
+                    document.getElementById('cameraImage').src = data.imageUrl;
                 })
                 .catch(error => {
                     console.error('Lỗi khi lấy ảnh mới:', error);
