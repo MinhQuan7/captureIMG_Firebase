@@ -62,10 +62,10 @@
     <script>
         function captureImage() {
             // Gửi yêu cầu đến server để chụp ảnh mới và trả về URL ảnh mới nhất
-            fetch('http://192.168.1.20:5000/capture')  // Phải thay đổi URL này theo địa chỉ server của bạn
+            fetch('http://192.168.1.20:5000/capture')
                 .then(response => response.json())
                 .then(data => {
-                    // Cập nhật URL mới cho ảnh
+                    // Cập nhật URL mới cho ảnh với timestamp để tránh cache
                     document.getElementById('cameraImage').src = data.imageUrl + '?t=' + new Date().getTime();
                 })
                 .catch(error => {
