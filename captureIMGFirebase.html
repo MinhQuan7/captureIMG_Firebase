@@ -56,7 +56,7 @@
 </head>
 <body>
     <h1>Camera Image</h1>
-    <img id="cameraImage" src="https://storage.googleapis.com/captureimage-38a12.appspot.com/images/camera_image.jpg" alt="Ảnh từ camera">
+    <img id="cameraImage" src="https://storage.googleapis.com/captureimage-38a12.appspot.com/images/camera_image.jpg?t=0" alt="Ảnh từ camera">
     <button class="capture-button" onclick="captureImage()">Chụp Ảnh</button>
 
     <script>
@@ -66,7 +66,8 @@
                 .then(response => response.json())
                 .then(data => {
                     // Cập nhật URL mới cho ảnh với timestamp để tránh cache
-                    document.getElementById('cameraImage').src = data.imageUrl + '?t=' + new Date().getTime();
+                    const timestamp = new Date().getTime();
+                    document.getElementById('cameraImage').src = data.imageUrl + '?t=' + timestamp;
                 })
                 .catch(error => {
                     console.error('Lỗi khi lấy ảnh mới:', error);
