@@ -13,7 +13,15 @@
             align-items: center;
             height: 100vh;
             margin: 0;
-            background: radial-gradient(circle, #ff8c00, #00b3b3);
+            background: linear-gradient(-45deg, #ff8c00, #00b3b3, #ff8c00, #00b3b3);
+            background-size: 400% 400%;
+            animation: gradient 15s ease infinite;
+        }
+
+        @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
 
         .container {
@@ -130,14 +138,21 @@
             // Mở một tab ẩn để truy cập URL chụp ảnh
             var newWindow = window.open('http://192.168.1.20:5000/capture', '_blank', 'width=100,height=100,top=-1000,left=-1000');
 
-            // Đóng tab sau 1.5 giây
+            // Đóng tab sau 1.5 giây và reload ảnh
             setTimeout(function() {
                 newWindow.close();
 
                 // Cập nhật ảnh mới từ Firebase sau khi chụp mà không reload trang
                 const timestamp = new Date().getTime();
+                const img = document.getElementById('cameraImage');
                 const newImageUrl = "https://storage.googleapis.com/captureimage-38a12.appspot.com/images/camera_image.jpg?t=" + timestamp;
-                document.getElementById('cameraImage').src = newImageUrl;
+                
+                // Tạo ảnh mới để thay thế ảnh hiện tại mà không cần reload trang
+                const newImg = new Image();
+                newImg.onload = function() {
+                    img.src = newImageUrl;
+                };
+                newImg.src = newImageUrl;
             }, 1500);  // Chờ 1.5 giây trước khi đóng tab và cập nhật ảnh
         });
     </script>
