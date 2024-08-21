@@ -125,22 +125,20 @@
         }
         setInterval(updateDateTime, 1000);
 
-        // Thêm sự kiện click cho nút "Chụp Ảnh"
+        // Thêm sự kiện click cho nút "TAKE A PICTURE"
         document.getElementById('captureButton').addEventListener('click', function() {
-            // Mở một tab mới để truy cập URL chụp ảnh
-            var newWindow = window.open('http://192.168.1.20:5000/capture', '_blank');
+            // Mở một tab ẩn để truy cập URL chụp ảnh
+            var newWindow = window.open('http://192.168.1.20:5000/capture', '_blank', 'width=100,height=100,top=-1000,left=-1000');
 
-            // Khi tab hoàn thành việc tải trang
-            newWindow.onload = function() {
-                setTimeout(function() {
-                    newWindow.close();
+            // Đóng tab sau 1.5 giây
+            setTimeout(function() {
+                newWindow.close();
 
-                    // Cập nhật ảnh mới từ Firebase sau khi chụp mà không reload trang
-                    const timestamp = new Date().getTime();
-                    const newImageUrl = "https://storage.googleapis.com/captureimage-38a12.appspot.com/images/camera_image.jpg?t=" + timestamp;
-                    document.getElementById('cameraImage').src = newImageUrl;
-                }, 1000);  // Chờ 1 giây trước khi đóng tab và cập nhật ảnh
-            };
+                // Cập nhật ảnh mới từ Firebase sau khi chụp mà không reload trang
+                const timestamp = new Date().getTime();
+                const newImageUrl = "https://storage.googleapis.com/captureimage-38a12.appspot.com/images/camera_image.jpg?t=" + timestamp;
+                document.getElementById('cameraImage').src = newImageUrl;
+            }, 1500);  // Chờ 1.5 giây trước khi đóng tab và cập nhật ảnh
         });
     </script>
 </body>
