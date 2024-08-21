@@ -4,7 +4,7 @@ from firebase_admin import credentials, storage
 from flask import Flask, jsonify
 
 # Khởi tạo Firebase Admin SDK
-cred = credentials.Certificate("F:/EoH Company/Capture_Image_iFrame/firebase/pythoncodeCaptureIMG_Camera/captureimage-38a12-firebase-adminsdk-ngvh0-37131cce0a.json")
+cred = credentials.Certificate("F:/EoH Company/Capture_Image_iFrame/firebase/pythoncodeCaptureIMG_Camera/captureimage-38a12-firebase-adminsdk-ngvh0-30c71341e1.json")
 firebase_admin.initialize_app(cred, {
     'storageBucket': 'captureimage-38a12.appspot.com'  #projectID
 })

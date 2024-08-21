@@ -136,14 +136,12 @@
         eraWidget.onValues((values) => {
             const input = document.getElementById('humanDetectionSensor');
             input.checked = values[config.id].value// Đặt trạng thái của checkbox dựa trên giá trị humanDetectionSensor
-
-            // Tự động chụp ảnh nếu phát hiện người
-            if (humanDetectionValue === 0) {
-                takePicture();
-            }
         });
         eraWidget.ready();
-
+        // Tự động chụp ảnh nếu phát hiện người
+        if (humanDetectionValue === 0) {
+            takePicture();
+        }
         // Cập nhật thời gian hiện tại
         function updateDateTime() {
             const now = new Date();
