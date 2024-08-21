@@ -129,14 +129,15 @@
         //_______________ERA:Human Detection______________
         const eraWidget = new EraWidget();
         let config = null;
+        let humanDetectionValue = 0 ;
         eraWidget.onConfiguration((configuration) => {
             config = configuration.realtime_configs[0];
         });
 
         eraWidget.onValues((values) => {
             const input = document.getElementById('humanDetectionSensor');
-            const humanDetectionValue = values[config.id].value;
-            input.checked = humanDetectionValue > 0; // Đặt trạng thái của checkbox dựa trên giá trị humanDetectionSensor
+            humanDetectionValue = values[config.id].value;
+            input.checked = values[config.id].value > 0 // Đặt trạng thái của checkbox dựa trên giá trị humanDetectionSensor
 
             // Tự động chụp ảnh nếu phát hiện người
             if (humanDetectionValue === 0) {
