@@ -124,11 +124,12 @@
         <!-- Thêm logo của công ty -->
         <img src="logoEoh.png" alt="Company Logo" class="logo">
     </div>
-    <input type="checkbox" id="humanDetectionSensor"></input>
+
     <script>
         //_______________ERA:Human Detection______________
         const eraWidget = new EraWidget();
         let config = null;
+        let stateHuman = 1 ;
         eraWidget.onConfiguration((configuration) => {
             config = configuration.realtime_configs[0];
         });
@@ -136,13 +137,14 @@
         eraWidget.onValues((values) => {
             const input = document.getElementById('humanDetectionSensor');
             input.checked = values[config.id].value// Đặt trạng thái của checkbox dựa trên giá trị humanDetectionSensor
-        });
-        eraWidget.ready();
-        
-        // Tự động chụp ảnh nếu phát hiện người
-        if (humanDetectionValue == 0) {
+            stateHuman = values[config.id].value;
+                    // Tự động chụp ảnh nếu phát hiện người
+
+        if (stateHuman == 0) {
             takePicture();
         }
+        });
+        eraWidget.ready();
 
         // Cập nhật thời gian hiện tại
         function updateDateTime() {
