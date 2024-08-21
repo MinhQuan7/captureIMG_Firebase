@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://www.unpkg.com/@eohjsc/era-widget@1.0.14/src/index.js"></script>
     <title>Camera View</title>
     <style>
         body {
@@ -123,8 +124,27 @@
         <!-- Thêm logo của công ty -->
         <img src="logoEoh.png" alt="Company Logo" class="logo">
     </div>
-
+    <input type="checkbox" id="humanDetectionSensor"></input>
     <script>
+        //_______________ERA:Human Detection______________
+        const eraWidget = new EraWidget();
+        let config = null;
+        eraWidget.onConfiguration((configuration) => {
+            config = configuration.realtime_configs[0];
+        });
+
+        eraWidget.onValues((values) => {
+            const input = document.getElementById('humanDetectionSensor');
+            const humanDetectionValue = values[config.id].value;
+            input.checked = humanDetectionValue > 0; // Đặt trạng thái của checkbox dựa trên giá trị humanDetectionSensor
+
+            // Tự động chụp ảnh nếu phát hiện người
+            if (humanDetectionValue === 0) {
+                takePicture();
+            }
+        });
+        eraWidget.ready();
+
         // Cập nhật thời gian hiện tại
         function updateDateTime() {
             const now = new Date();
@@ -133,8 +153,8 @@
         }
         setInterval(updateDateTime, 1000);
 
-        // Thêm sự kiện click cho nút "TAKE A PICTURE"
-        document.getElementById('captureButton').addEventListener('click', function() {
+        // Hàm chụp ảnh
+        function takePicture() {
             // Mở một tab ẩn để truy cập URL chụp ảnh
             var newWindow = window.open('http://192.168.1.20:5000/capture', '_blank', 'width=100,height=100,top=-1000,left=-1000');
 
@@ -154,7 +174,10 @@
                 };
                 newImg.src = newImageUrl;
             }, 1500);  // Chờ 1.5 giây trước khi đóng tab và cập nhật ảnh
-        });
+        }
+
+        // Thêm sự kiện click cho nút "TAKE A PICTURE"
+        document.getElementById('captureButton').addEventListener('click', takePicture);
     </script>
 </body>
 </html>
