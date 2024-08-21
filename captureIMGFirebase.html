@@ -108,9 +108,9 @@
         </div>
         <div class="side-panel">
             <h2>CAMERA DETAILS</h2>
-            <p><strong>Camera Brand:</strong> IPCAM HKVISION</p>
-            <p><strong>Date:</strong> <span id="datetime">--:--:--</span></p>
-            <button class="capture-button" id="captureButton">Take A Picture</button>
+            <p><strong>CAMERA BRAND:</strong> IPCAM HKVISION</p>
+            <p><strong>DATE:</strong> <span id="datetime">--:--:--</span></p>
+            <button class="capture-button" id="captureButton">TAKE A PICTURE</button>
         </div>
         <!-- Thêm logo của công ty -->
         <img src="logoEoh.png" alt="Company Logo" class="logo">
@@ -129,16 +129,18 @@
         document.getElementById('captureButton').addEventListener('click', function() {
             // Mở một tab mới để truy cập URL chụp ảnh
             var newWindow = window.open('http://192.168.1.20:5000/capture', '_blank');
-            newWindow.addEventListener('load', function() {
+
+            // Khi tab hoàn thành việc tải trang
+            newWindow.onload = function() {
                 setTimeout(function() {
                     newWindow.close();
-                    
+
                     // Cập nhật ảnh mới từ Firebase sau khi chụp mà không reload trang
                     const timestamp = new Date().getTime();
                     const newImageUrl = "https://storage.googleapis.com/captureimage-38a12.appspot.com/images/camera_image.jpg?t=" + timestamp;
                     document.getElementById('cameraImage').src = newImageUrl;
                 }, 1000);  // Chờ 1 giây trước khi đóng tab và cập nhật ảnh
-            });
+            };
         });
     </script>
 </body>
