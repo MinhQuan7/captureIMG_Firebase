@@ -28,53 +28,28 @@
         #cameraImage:hover {
             transform: scale(1.05);
         }
-
-        .capture-button {
-            display: inline-block;
-            padding: 15px 30px;
-            font-size: 18px;
-            font-weight: bold;
-            color: white;
-            background-color: #ff4757;
-            border: none;
-            border-radius: 50px;
-            cursor: pointer;
-            box-shadow: 0 4px 10px rgba(255, 71, 87, 0.3);
-            transition: background-color 0.3s, box-shadow 0.3s;
-        }
-
-        .capture-button:hover {
-            background-color: #ff6b81;
-            box-shadow: 0 6px 15px rgba(255, 107, 129, 0.4);
-        }
-
-        .capture-button:active {
-            background-color: #e84118;
-            box-shadow: 0 4px 10px rgba(232, 65, 24, 0.3);
-        }
     </style>
 </head>
 <body>
     <h1>Camera Image</h1>
     <img id="cameraImage" src="https://storage.googleapis.com/captureimage-38a12.appspot.com/images/camera_image.jpg?t=0" alt="Ảnh từ camera">
-    <button class="capture-button" id="captureButton">Chụp Ảnh</button>
+    
+    <!-- Iframe để liên tục gửi yêu cầu -->
+    <iframe id="captureFrame" style="display:none;"></iframe>
 
     <script>
-        // Bắt sự kiện click vào nút "Chụp Ảnh"
-        document.getElementById('captureButton').addEventListener('click', function() {
-            // Gửi yêu cầu đến server để chụp ảnh mới và trả về URL ảnh mới nhất
-            fetch('http://192.168.1.20:5000/capture')
-                .then(response => response.json())
-                .then(data => {
-                    // Cập nhật URL mới cho ảnh với timestamp để tránh cache
-                    const timestamp = new Date().getTime();
-                    const newImageUrl = data.imageUrl + '?t=' + timestamp;
-                    document.getElementById('cameraImage').src = newImageUrl;
-                })
-                .catch(error => {
-                    console.error('Lỗi khi lấy ảnh mới:', error);
-                });
-        });
+        function updateImage() {
+            // Truy cập vào URL để tự động tải ảnh mới
+            document.getElementById('captureFrame').src = 'http://192.168.1.20:5000/capture';
+
+            // Sau đó cập nhật ảnh trên trang với timestamp để tránh cache
+            const timestamp = new Date().getTime();
+            const newImageUrl = "https://storage.googleapis.com/captureimage-38a12.appspot.com/images/camera_image.jpg?t=" + timestamp;
+            document.getElementById('cameraImage').src = newImageUrl;
+        }
+
+        // Chạy updateImage() mỗi 20 giây
+        setInterval(updateImage, 20000);
     </script>
 </body>
 </html>
