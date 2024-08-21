@@ -62,7 +62,7 @@
     <script>
         function captureImage() {
             // Gửi yêu cầu đến server để lấy URL mới nhất
-            fetch('https://storage.googleapis.com/captureimage-38a12.appspot.com/images/camera_image.jpg') //must change URL
+            fetch("https://storage.googleapis.com/captureimage-38a12.appspot.com/images/camera_image.jpg") //must change URL
                 .then(response => response.json())
                 .then(data => {
                     // Giả định rằng server trả về URL của ảnh mới nhất
