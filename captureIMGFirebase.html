@@ -61,12 +61,12 @@
 
     <script>
         function captureImage() {
-            // Gửi yêu cầu đến server để lấy URL mới nhất
-            fetch("https://storage.googleapis.com/captureimage-38a12.appspot.com/images/camera_image.jpg") //must change URL
+            // Gửi yêu cầu đến server để chụp ảnh mới và trả về URL ảnh mới nhất
+            fetch('http://192.168.1.20:5000/capture')  // Phải thay đổi URL này theo địa chỉ server của bạn
                 .then(response => response.json())
                 .then(data => {
-                    // Giả định rằng server trả về URL của ảnh mới nhất
-                    document.getElementById('cameraImage').src = data.imageUrl;
+                    // Cập nhật URL mới cho ảnh
+                    document.getElementById('cameraImage').src = data.imageUrl + '?t=' + new Date().getTime();
                 })
                 .catch(error => {
                     console.error('Lỗi khi lấy ảnh mới:', error);
