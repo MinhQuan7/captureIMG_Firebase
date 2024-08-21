@@ -67,7 +67,8 @@
                 .then(data => {
                     // Cập nhật URL mới cho ảnh với timestamp để tránh cache
                     const timestamp = new Date().getTime();
-                    document.getElementById('cameraImage').src = data.imageUrl + '?t=' + timestamp;
+                    const newImageUrl = data.imageUrl + '?t=' + timestamp;
+                    document.getElementById('cameraImage').src = newImageUrl;
                 })
                 .catch(error => {
                     console.error('Lỗi khi lấy ảnh mới:', error);
