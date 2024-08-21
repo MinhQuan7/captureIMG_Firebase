@@ -16,6 +16,7 @@
         h1 {
             color: #333;
         }
+
         #cameraImage {
             max-width: 100%;
             height: auto;
@@ -57,16 +58,14 @@
 <body>
     <h1>Camera Image</h1>
     <img id="cameraImage" src="https://storage.googleapis.com/captureimage-38a12.appspot.com/images/camera_image.jpg?t=0" alt="Ảnh từ camera">
-    <button class="capture-button" id="captureButton">Chụp Ảnh</button>
+    <button class="capture-button" id="captureButton">Take A Picture</button>
 
     <script>
-        // Bắt sự kiện click vào nút "Chụp Ảnh"
-        document.getElementById('captureButton').addEventListener('click', function() {
-            // Gửi yêu cầu đến server để chụp ảnh mới và trả về URL ảnh mới nhất
+        // Hàm cập nhật ảnh mới với URL mới
+        function updateImage() {
             fetch('http://192.168.1.20:5000/capture')
                 .then(response => response.json())
                 .then(data => {
-                    // Cập nhật URL mới cho ảnh với timestamp để tránh cache
                     const timestamp = new Date().getTime();
                     const newImageUrl = data.imageUrl + '?t=' + timestamp;
                     document.getElementById('cameraImage').src = newImageUrl;
@@ -74,7 +73,10 @@
                 .catch(error => {
                     console.error('Lỗi khi lấy ảnh mới:', error);
                 });
-        });
+        }
+
+        // Bắt sự kiện click vào nút "Chụp Ảnh"
+        document.getElementById('captureButton').addEventListener('click', updateImage);
     </script>
 </body>
 </html>
