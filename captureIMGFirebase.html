@@ -132,7 +132,7 @@
 
         // Lấy cấu hình khi hệ thống sẵn sàng
         eraWidget.onConfiguration((configuration) => {
-            config = configuration.realtime_configs.find(conf => conf.id === 'humanDetectionSensor');
+            config = configuration.realtime_configs.find(conf => conf.id == 'humanDetectionSensor');
         });
 
         // Xử lý giá trị từ humanDetectionSensor
@@ -140,7 +140,7 @@
             const humanDetectionValue = values[config.id]?.value;
 
             // Nếu phát hiện người (giá trị bằng 0), chụp ảnh
-            if (humanDetectionValue === 0) {
+            if (humanDetectionValue == 0) {
                 takePicture();
             }
         });
