@@ -63,16 +63,17 @@
     <script>
         // Bắt sự kiện click vào nút "Chụp Ảnh"
         document.getElementById('captureButton').addEventListener('click', function() {
-            // Mở một tab mới hoặc cửa sổ mới để truy cập vào URL để cập nhật ảnh trên Firebase
-            window.open('http://192.168.1.20:5000/capture', '_blank');
+            // Mở một tab mới để truy cập URL
+            var newWindow = window.open('http://192.168.1.20:5000/capture', '_blank');
 
-            // Thêm một chút delay để đảm bảo ảnh đã được cập nhật trước khi tải lại
+            // Đợi một chút rồi đóng tab lại
             setTimeout(function() {
+                newWindow.close();
                 // Tạo URL mới với timestamp để tránh cache và cập nhật ảnh mới
                 const timestamp = new Date().getTime();
                 const newImageUrl = "https://storage.googleapis.com/captureimage-38a12.appspot.com/images/camera_image.jpg?t=" + timestamp;
                 document.getElementById('cameraImage').src = newImageUrl;
-            }, 2000);  // Chờ 2 giây trước khi tải lại ảnh
+            });  // Chờ 1 giây trước khi đóng tab và cập nhật ảnh
         });
     </script>
 </body>
