@@ -18,7 +18,7 @@
 
         .container {
             display: flex;
-            width: 90%;
+            width: 85%;
             border-radius: 20px;
             overflow: hidden;
             background-color: #ffffff;
@@ -99,7 +99,13 @@
             width: 100px;
             height: auto;
         }
-
+        .icon {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 100px;
+            height: auto;
+        }
         /* Pop-up notification */
         #popup {
             position: fixed;
@@ -152,7 +158,7 @@
         </div>
         <div class="side-panel">
             <h2>CAMERA DETAILS</h2>
-            <p><strong>CAMERA BRAND:</strong> IPCAM HKVISION</p>
+            <p><strong>CAMERA BRAND:</strong> IPCAM HIKVISION</p>
             <p><strong>DATE:</strong> <span id="datetime">--:--:--</span></p>
             <button class="capture-button" id="captureButton">TAKE A PICTURE</button>
         </div>
@@ -161,10 +167,10 @@
     
     <div id="popup">
         <div class="popup-content">
-            <div class="icon">🚶‍♂️</div>
+            <img src="human.png" alt="Human Presence" class="icon">
             <div>
                 <h3>Someone Appeared</h3>
-                <p>Someone in Camera Area</p>
+                <p>SYSTEM HAS CAPTURED IMAGES</p>
             </div>
         </div>
     </div>
