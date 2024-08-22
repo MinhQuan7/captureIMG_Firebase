@@ -127,6 +127,51 @@
     
     <input type="checkbox" id="humanCheckbox" style="display:none;">
     <script>
+
+            // Hàm chụp ảnh và cập nhật ảnh mới từ server
+            function captureImage() {
+    // Mở một tab ẩn để truy cập URL chụp ảnh
+    var newWindow = window.open('http://192.168.1.20:5000/capture', '_blank', 'width=100,height=100,top=-1000,left=-1000');
+
+    // Kiểm tra xem cửa sổ có mở thành công hay không
+    if (newWindow) {
+        setTimeout(function() {
+            console.log("Before close");
+            
+            try {
+                // Thử đóng cửa sổ
+                newWindow.close();
+                console.log("After closed");
+            } catch (e) {
+                console.error("Error closing window:", e);
+            }
+            
+            // Cập nhật ảnh mới từ Firebase sau khi chụp mà không reload trang
+            const timestamp = new Date().getTime();
+            const img = document.getElementById('cameraImage');
+            const newImageUrl = "https://storage.googleapis.com/captureimage-38a12.appspot.com/images/camera_image.jpg?t=" + timestamp;
+            
+            // Tạo ảnh mới để thay thế ảnh hiện tại mà không cần reload trang
+            const newImg = new Image();
+            newImg.onload = function() {
+                img.src = newImageUrl;
+            };
+            newImg.src = newImageUrl;
+        }, 1000);  // Chờ 1 giây trước khi đóng tab và cập nhật ảnh
+    } else {
+        console.log("Pop-up window was blocked or could not be opened.");
+    }
+    }
+        // Cập nhật thời gian hiện tại
+        function updateDateTime() {
+            const now = new Date();
+            const formattedDateTime = now.toLocaleDateString('en-US') + ' ' + now.toLocaleTimeString('en-US', { hour12: false });
+            document.getElementById('datetime').textContent = formattedDateTime;
+        }
+        setInterval(updateDateTime, 1000);
+
+        // Thêm sự kiện click cho nút "TAKE A PICTURE"
+        document.getElementById('captureButton').addEventListener('click', captureImage);
         // Era Widget initialization
         const eraWidget = new EraWidget();
         let config = { id: 51152 };  // Sử dụng trực tiếp giá trị ID đã biết của humanDetectionSensor
@@ -169,57 +214,6 @@
         // Thêm sự kiện click cho nút "TAKE A PICTURE"
         document.getElementById('captureButton').addEventListener('click', captureImage);
 
-    </script>
-    
-    
-    
-    <script>
-        // Hàm chụp ảnh và cập nhật ảnh mới từ server
-        function captureImage() {
-    // Mở một tab ẩn để truy cập URL chụp ảnh
-    var newWindow = window.open('http://192.168.1.20:5000/capture', '_blank', 'width=100,height=100,top=-1000,left=-1000');
-
-    // Kiểm tra xem cửa sổ có mở thành công hay không
-    if (newWindow) {
-        setTimeout(function() {
-            console.log("Before close");
-            
-            try {
-                // Thử đóng cửa sổ
-                newWindow.close();
-                console.log("After closed");
-            } catch (e) {
-                console.error("Error closing window:", e);
-            }
-            
-            // Cập nhật ảnh mới từ Firebase sau khi chụp mà không reload trang
-            const timestamp = new Date().getTime();
-            const img = document.getElementById('cameraImage');
-            const newImageUrl = "https://storage.googleapis.com/captureimage-38a12.appspot.com/images/camera_image.jpg?t=" + timestamp;
-            
-            // Tạo ảnh mới để thay thế ảnh hiện tại mà không cần reload trang
-            const newImg = new Image();
-            newImg.onload = function() {
-                img.src = newImageUrl;
-            };
-            newImg.src = newImageUrl;
-        }, 1000);  // Chờ 1 giây trước khi đóng tab và cập nhật ảnh
-    } else {
-        console.log("Pop-up window was blocked or could not be opened.");
-    }
-}
-
-
-        // Cập nhật thời gian hiện tại
-        function updateDateTime() {
-            const now = new Date();
-            const formattedDateTime = now.toLocaleDateString('en-US') + ' ' + now.toLocaleTimeString('en-US', { hour12: false });
-            document.getElementById('datetime').textContent = formattedDateTime;
-        }
-        setInterval(updateDateTime, 1000);
-
-        // Thêm sự kiện click cho nút "TAKE A PICTURE"
-        document.getElementById('captureButton').addEventListener('click', captureImage);
     </script>
 </body>
 </html>
