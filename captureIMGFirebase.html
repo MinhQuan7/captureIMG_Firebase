@@ -124,7 +124,7 @@
         <!-- Thêm logo của công ty -->
         <img src="logoEoh.png" alt="Company Logo" class="logo">
     </div>
-    
+    <input type="checkbox" id="humanCheckbox" style="display:none;">
     <script>
       // Era Widget initialization
         const eraWidget = new EraWidget();
@@ -139,7 +139,7 @@
             // Lấy giá trị humanDetectionSensor từ hệ thống
             if (config && values[config.id]) {
             const humanDetectionValue = values[config.id].value; // Giả sử values[config.id].value là nhịp tim thực tế
-            document.getElementById('humanDetectionSensor').checked = humanDetectionValue > 0;
+            document.getElementById('humanCheckbox').checked = humanDetectionValue > 0;
             document.getElementById('humanDetectionSensor').value = humanDetectionValue;
             }
             // Nếu phát hiện người (giá trị bằng 0), thực hiện chụp ảnh
