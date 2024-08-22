@@ -8,9 +8,7 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background: linear-gradient(135deg, #00b3b3, #ff8c00);
-            background-size: 200% 200%;
-            animation: backgroundAnimation 10s ease infinite;
+            background-color: #f0f0f0; /* Neutral background for the body */
             display: flex;
             justify-content: center;
             align-items: center;
@@ -18,19 +16,13 @@
             margin: 0;
         }
 
-        @keyframes backgroundAnimation {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-
         .container {
             display: flex;
             width: 85%;
             border-radius: 20px;
             overflow: hidden;
-            background: linear-gradient(135deg, #00b3b3, #ff8c00); /* Matching background */
-            box-shadow: 0 0 30px rgba(0, 179, 179, 0.4), 0 0 10px rgba(255, 140, 0, 0.6);
+            background: #fff; /* Neutral background for the container */
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.1);
             position: relative;
         }
 
@@ -53,13 +45,35 @@
         .side-panel {
             flex: 3;
             padding: 20px;
-            background: linear-gradient(135deg, #00b3b3, #ff8c00);
+            background: linear-gradient(135deg, #00b3b3, #ff8c00); /* Dynamic gradient background */
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: flex-start;
             color: white;
             box-shadow: inset 0 0 15px rgba(255, 140, 0, 0.3);
+            position: relative;
+        }
+
+        /* Adding the dynamic gradient and blur effect */
+        .side-panel::before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            right: -10px;
+            bottom: -10px;
+            background: inherit; /* Inherits the dynamic gradient */
+            filter: blur(20px); /* Blur effect */
+            z-index: -1;
+            border-radius: 30px; /* Rounded blur effect */
+            animation: backgroundAnimation 10s ease infinite;
+        }
+
+        @keyframes backgroundAnimation {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
 
         .side-panel h2 {
@@ -204,10 +218,9 @@
 
     <input type="checkbox" id="humanCheckbox" style="display:none;">
     <script>
-        // Biến cờ để kiểm soát việc chụp ảnh
+        // JavaScript code remains unchanged
         let lastHumanDetectionValue = null;
 
-        // Hàm chụp ảnh và cập nhật ảnh mới từ server
         function captureImage() {
             var newWindow = window.open('http://192.168.1.20:5000/capture', '_blank', 'width=100,height=100,top=-1000,left=-1000');
 
@@ -261,7 +274,6 @@
                 humanDetectionValue = values[config.id].value;
                 console.log("Received humanDetectionValue:", humanDetectionValue);
 
-                // Kiểm tra và thực hiện hành động chụp ảnh chỉ khi giá trị thay đổi
                 if (humanDetectionValue === 0 && lastHumanDetectionValue !== 0) {
                     console.log("Human detected (humanDetectionValue == 0). Taking a picture...");
                     captureImage();
@@ -270,7 +282,6 @@
                     console.log("No human detected (humanDetectionValue != 0).");
                 }
 
-                // Cập nhật giá trị cờ
                 lastHumanDetectionValue = humanDetectionValue;
             } else {
                 console.log("No valid values received for humanDetectionSensor with ID:", config.id);
@@ -281,10 +292,9 @@
             const popup = document.getElementById('popup');
             popup.style.display = 'block';
 
-            // Hide the popup after 10 seconds
             setTimeout(() => {
                 popup.style.display = 'none';
-            }, 10000); // Ẩn popup sau 10 giây
+            }, 10000); 
         }
 
         eraWidget.ready();
