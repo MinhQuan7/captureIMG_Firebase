@@ -21,25 +21,26 @@
             width: 85%;
             border-radius: 20px;
             overflow: hidden;
-            background-color: #ffffff;
+            background: linear-gradient(135deg, #00b3b3, #ff8c00); /* Dynamic gradient background */
             box-shadow: 0 0 30px rgba(0, 179, 179, 0.4), 0 0 10px rgba(255, 140, 0, 0.6);
             position: relative;
         }
 
         .camera-view {
             flex: 7;
-            padding: 20px;
-            background-color: #ffffff;
+            padding: 0;
+            background: linear-gradient(135deg, #00b3b3, #ff8c00); /* Gradient matching surrounding tone */
             display: flex;
             justify-content: center;
             align-items: center;
+            border-radius: 20px;
         }
 
         .camera-view img {
             width: 100%;
             height: auto;
-            border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            border-radius: 20px;
+            box-shadow: none; /* Removing the inner shadow to blend with the new background */
         }
 
         .side-panel {
@@ -99,65 +100,73 @@
             width: 100px;
             height: auto;
         }
-        .icon {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            width: 100px;
-            height: auto;
+
+        /* Updated Pop-up notification */
+        #popup {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 350px;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            display: none;
+            animation: fadeIn 0.3s ease-in-out, fadeOut 0.5s ease-in-out 10s;
+            padding: 15px;
         }
-    /* Updated Pop-up notification */
-    #popup {
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        width: 350px;
-        background-color: #ffffff;
-        border-radius: 10px;
-        box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-        display: none;
-        animation: fadeIn 0.3s ease-in-out;
-        padding: 15px;
-    }
 
-    #popup .icon {
-        font-size: 24px;
-        text-align: center;
-        color: #ffcc00;
-        padding: 15px;
-        border-right: 1px solid #e0e0e0;
-        width: 50px;
-        height: 50px;
-        margin-right: 15px;
-    }
+        #popup .icon {
+            font-size: 24px;
+            text-align: center;
+            color: #ffcc00;
+            padding: 15px;
+            width: 50px;
+            height: 50px;
+            margin-right: 15px;
+        }
 
-    #popup h3 {
-        margin: 0;
-        padding: 0;
-        font-size: 20px;
-        color: #333333;
-        font-weight: bold;
-    }
+        #popup h3 {
+            margin: 0;
+            padding: 0;
+            font-size: 20px;
+            color: #333333;
+            font-weight: bold;
+        }
 
-    #popup p {
-        margin: 5px 0 0;
-        padding: 0;
-        font-size: 16px;
-        color: #666666;
-    }
+        #popup p {
+            margin: 5px 0 0;
+            padding: 0;
+            font-size: 16px;
+            color: #666666;
+        }
 
-    .popup-content {
-        display: flex;
-        align-items: center;
-    }
+        .popup-content {
+            display: flex;
+            align-items: center;
+        }
 
-    @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(-10px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
+        .progress-bar {
+            height: 5px;
+            background-color: #00b3b3;
+            border-radius: 5px;
+            width: 0;
+            margin-top: 10px;
+            animation: progress 10s linear forwards;
+        }
+
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(-10px); }
             to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeOut {
+            from { opacity: 1; transform: translateY(0); }
+            to { opacity: 0; transform: translateY(-10px); }
+        }
+
+        @keyframes progress {
+            from { width: 0%; }
+            to { width: 100%; }
         }
     </style>
 </head>
@@ -183,6 +192,7 @@
                 <p>SYSTEM HAS CAPTURED IMAGES</p>
             </div>
         </div>
+        <div class="progress-bar"></div>
     </div>
 
     <input type="checkbox" id="humanCheckbox" style="display:none;">
@@ -263,6 +273,8 @@
         function showPopup() {
             const popup = document.getElementById('popup');
             popup.style.display = 'block';
+
+            // Hide the popup after 10 seconds
             setTimeout(() => {
                 popup.style.display = 'none';
             }, 10000); // Ẩn popup sau 10 giây
@@ -272,5 +284,3 @@
     </script>
 </body>
 </html>
-
-
