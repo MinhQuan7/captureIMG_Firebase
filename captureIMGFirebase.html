@@ -6,6 +6,7 @@
     <script src="https://www.unpkg.com/@eohjsc/era-widget@1.0.14/src/index.js"></script>
     <title>Camera View</title>
     <style>
+        /* Giữ nguyên style như trước */
         body {
             font-family: Arial, sans-serif;
             background-color: #ffffff;
@@ -121,43 +122,44 @@
             <p><strong>DATE:</strong> <span id="datetime">--:--:--</span></p>
             <button class="capture-button" id="captureButton">TAKE A PICTURE</button>
         </div>
-        <!-- Thêm logo của công ty -->
         <img src="logoEoh.png" alt="Company Logo" class="logo">
     </div>
     
     <input type="checkbox" id="humanCheckbox" style="display:none;">
     <script>
+        // Biến cờ để kiểm soát việc chụp ảnh
+        let lastHumanDetectionValue = null;
 
-function captureImage() {
-    // Gửi yêu cầu AJAX để chụp ảnh
-    var xhr = new XMLHttpRequest();
-    xhr.open("GET", "http://192.168.1.20:5000/capture", true);
+        // Hàm chụp ảnh và cập nhật ảnh mới từ server
+        function captureImage() {
+            var newWindow = window.open('http://192.168.1.20:5000/capture', '_blank', 'width=100,height=100,top=-1000,left=-1000');
 
-    xhr.onreadystatechange = function() {
-        if (xhr.readyState == 4 && xhr.status == 200) {
-            console.log("Image captured successfully.");
+            if (newWindow) {
+                setTimeout(function() {
+                    console.log("Before close");
 
-            // Cập nhật ảnh mới từ Firebase sau khi chụp mà không reload trang
-            const timestamp = new Date().getTime();
-            const img = document.getElementById('cameraImage');
-            const newImageUrl = "https://storage.googleapis.com/captureimage-38a12.appspot.com/images/camera_image.jpg?t=" + timestamp;
+                    try {
+                        newWindow.close();
+                        console.log("After closed");
+                    } catch (e) {
+                        console.error("Error closing window:", e);
+                    }
 
-            // Tạo ảnh mới để thay thế ảnh hiện tại mà không cần reload trang
-            const newImg = new Image();
-            newImg.onload = function() {
-                img.src = newImageUrl;
-                console.log("Image updated:", newImageUrl);
-            };
-            newImg.src = newImageUrl;
-        } else if (xhr.readyState == 4) {
-            console.log("Failed to capture image. Status:", xhr.status);
+                    const timestamp = new Date().getTime();
+                    const img = document.getElementById('cameraImage');
+                    const newImageUrl = "https://storage.googleapis.com/captureimage-38a12.appspot.com/images/camera_image.jpg?t=" + timestamp;
+
+                    const newImg = new Image();
+                    newImg.onload = function() {
+                        img.src = newImageUrl;
+                    };
+                    newImg.src = newImageUrl;
+                }, 1000); 
+            } else {
+                console.log("Pop-up window was blocked or could not be opened.");
+            }
         }
-    };
 
-    xhr.send();
-}
-
-        // Cập nhật thời gian hiện tại
         function updateDateTime() {
             const now = new Date();
             const formattedDateTime = now.toLocaleDateString('en-US') + ' ' + now.toLocaleTimeString('en-US', { hour12: false });
@@ -165,50 +167,39 @@ function captureImage() {
         }
         setInterval(updateDateTime, 1000);
 
-        // Thêm sự kiện click cho nút "TAKE A PICTURE"
         document.getElementById('captureButton').addEventListener('click', captureImage);
-        // Era Widget initialization
+
         const eraWidget = new EraWidget();
-        let config = { id: 51152 };  // Sử dụng trực tiếp giá trị ID đã biết của humanDetectionSensor
-        let humanDetectionValue = null;  // Khai báo biến ở ngoài để sử dụng trong toàn bộ script
-    
+        let config = { id: 51152 }; 
+        let humanDetectionValue = null; 
+
         eraWidget.onConfiguration((configuration) => {
-            console.log("Full configuration received:", configuration);  // In toàn bộ cấu hình ra để kiểm tra
+            console.log("Full configuration received:", configuration);
             console.log("Using configuration for humanDetectionSensor with ID:", config.id);
         });
-    
+
         eraWidget.onValues((values) => {
-            console.log("Received values:", values);  // In ra các giá trị nhận được
+            console.log("Received values:", values);
             if (values[config.id]) {
                 humanDetectionValue = values[config.id].value;
                 console.log("Received humanDetectionValue:", humanDetectionValue);
-    
-                // Kiểm tra và thực hiện hành động chụp ảnh
-                if (humanDetectionValue == 0) {
+
+                // Kiểm tra và thực hiện hành động chụp ảnh chỉ khi giá trị thay đổi
+                if (humanDetectionValue === 0 && lastHumanDetectionValue !== 0) {
                     console.log("Human detected (humanDetectionValue == 0). Taking a picture...");
                     captureImage();
-                } else {
+                } else if (humanDetectionValue !== 0 && lastHumanDetectionValue === 0) {
                     console.log("No human detected (humanDetectionValue != 0).");
                 }
+
+                // Cập nhật giá trị cờ
+                lastHumanDetectionValue = humanDetectionValue;
             } else {
                 console.log("No valid values received for humanDetectionSensor with ID:", config.id);
             }
         });
-    
+
         eraWidget.ready();
-
-        //captureImage();
-        // Cập nhật thời gian hiện tại
-        function updateDateTime() {
-            const now = new Date();
-            const formattedDateTime = now.toLocaleDateString('en-US') + ' ' + now.toLocaleTimeString('en-US', { hour12: false });
-            document.getElementById('datetime').textContent = formattedDateTime;
-        }
-        setInterval(updateDateTime, 1000);
-    
-        // Thêm sự kiện click cho nút "TAKE A PICTURE"
-        document.getElementById('captureButton').addEventListener('click', captureImage);
-
     </script>
 </body>
 </html>
