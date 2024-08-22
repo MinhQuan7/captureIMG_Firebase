@@ -133,9 +133,13 @@
         let humanDetectionValue = null;  // Khai báo biến ở ngoài để sử dụng trong toàn bộ script
 
         eraWidget.onConfiguration((configuration) => {
-            // Lấy cấu hình cho humanDetectionSensor
-            config = configuration.realtime_configs.find(config => config.name === 'humanDetectionSensor');
-            console.log("Configuration loaded:", config);
+        console.log("Full configuration received:", configuration);  // In toàn bộ cấu hình ra để kiểm tra
+        config = configuration.realtime_configs.find(config => config.name === 'humanDetectionSensor');
+        if (config) {
+            console.log("Configuration for humanDetectionSensor found:", config);
+        } else {
+            console.log("Configuration for humanDetectionSensor not found.");
+        }
         });
 
         eraWidget.onValues((values) => {
