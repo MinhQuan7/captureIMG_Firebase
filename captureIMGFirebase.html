@@ -124,47 +124,79 @@
         <!-- Thêm logo của công ty -->
         <img src="logoEoh.png" alt="Company Logo" class="logo">
     </div>
+    
     <input type="checkbox" id="humanCheckbox" style="display:none;">
     <script>
-      // Era Widget initialization
+        // Era Widget initialization
         const eraWidget = new EraWidget();
         let config = null;
-        // Khởi tạo giá trị humanDetectionSensor mặc định
+        let humanDetectionValue = null;  // Khai báo biến ở ngoài để sử dụng trong toàn bộ script
+
         eraWidget.onConfiguration((configuration) => {
             // Lấy cấu hình cho humanDetectionSensor
             config = configuration.realtime_configs.find(config => config.name === 'humanDetectionSensor');
+            console.log("Configuration loaded:", config);
         });
 
         eraWidget.onValues((values) => {
             // Lấy giá trị humanDetectionSensor từ hệ thống
             if (config && values[config.id]) {
-            const humanDetectionValue = values[config.id].value; // Giả sử values[config.id].value là nhịp tim thực tế
-            document.getElementById('humanCheckbox').checked = humanDetectionValue > 0;
-            document.getElementById('humanDetectionSensor').value = humanDetectionValue;
+                humanDetectionValue = values[config.id].value; // Lấy giá trị thực tế
+                console.log("Received humanDetectionValue:", humanDetectionValue);
+
+                document.getElementById('humanCheckbox').checked = humanDetectionValue > 0;
+                document.getElementById('humanCheckbox').value = humanDetectionValue;
+
+                // Nếu phát hiện người (giá trị bằng 0), thực hiện chụp ảnh
+                if (humanDetectionValue == 0) {
+                    console.log("Human detected (humanDetectionValue == 0). Taking a picture...");
+                    captureImage();
+                } else {
+                    console.log("No human detected (humanDetectionValue != 0).");
+                }
+            } else {
+                console.log("No valid configuration or values received for humanDetectionSensor.");
             }
-            // Nếu phát hiện người (giá trị bằng 0), thực hiện chụp ảnh
-            if (humanDetectionValue == 0) {
-                document.getElementById('captureButton').addEventListener('click', captureImage);
-                // Mở một tab ẩn để truy cập URL chụp ảnh
-                var newWindow = window.open('http://192.168.1.20:5000/capture', '_blank', 'width=100,height=100,top=-1000,left=-1000');
-                // Đóng tab sau 1.5 giây và reload ảnh
-                setTimeout(function() {
-                    newWindow.close();
+        });
+
+        eraWidget.ready();
+
+        // Hàm chụp ảnh và cập nhật ảnh mới từ server sử dụng AJAX
+        function captureImage() {
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", "http://192.168.1.20:5000/capture", true);
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    console.log("Image captured successfully via AJAX.");
+
                     // Cập nhật ảnh mới từ Firebase sau khi chụp mà không reload trang
                     const timestamp = new Date().getTime();
                     const img = document.getElementById('cameraImage');
                     const newImageUrl = "https://storage.googleapis.com/captureimage-38a12.appspot.com/images/camera_image.jpg?t=" + timestamp;
-                    
-                    // Tạo ảnh mới để thay thế ảnh hiện tại mà không cần reload trang
+
                     const newImg = new Image();
                     newImg.onload = function() {
                         img.src = newImageUrl;
+                        console.log("Image updated:", newImageUrl);
                     };
                     newImg.src = newImageUrl;
-                }, 1000);  // Chờ 1.5 giây trước khi đóng tab và cập nhật ảnh
-            }
-        });
-        eraWidget.ready();
+                } else if (xhr.readyState == 4) {
+                    console.log("Failed to capture image. Status:", xhr.status);
+                }
+            };
+            xhr.send();
+        }
+
+        // Cập nhật thời gian hiện tại
+        function updateDateTime() {
+            const now = new Date();
+            const formattedDateTime = now.toLocaleDateString('en-US') + ' ' + now.toLocaleTimeString('en-US', { hour12: false });
+            document.getElementById('datetime').textContent = formattedDateTime;
+        }
+        setInterval(updateDateTime, 1000);
+
+        // Thêm sự kiện click cho nút "TAKE A PICTURE"
+        document.getElementById('captureButton').addEventListener('click', captureImage);
     </script>
     <script>
         // Hàm chụp ảnh và cập nhật ảnh mới từ server
