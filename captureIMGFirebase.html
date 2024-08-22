@@ -60,6 +60,7 @@
             background-color: rgba(255, 255, 255, 0.1); /* Slightly transparent */
             border-right: 2px solid rgba(255, 255, 255, 0.3); /* Divider border */
             border-radius: 12px;
+            position: relative;
         }
 
         .camera-view img {
@@ -67,6 +68,7 @@
             height: auto;
             border-radius: 12px;
             box-shadow: none;
+            transition: filter 0.3s, transform 0.3s; /* For brightness, contrast, and rotation */
         }
 
         .side-panel {
@@ -79,6 +81,7 @@
             justify-content: center;
             align-items: flex-start;
             border-radius: 12px;
+            position: relative;
         }
 
         .side-panel h2 {
@@ -119,6 +122,26 @@
             box-shadow: 0 4px 10px rgba(255, 159, 67, 0.3);
         }
 
+        .settings {
+            margin-top: 30px;
+            width: 100%;
+        }
+
+        .settings h3 {
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+
+        .settings label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .settings input[type="range"] {
+            width: 100%;
+            margin-bottom: 15px;
+        }
+
         .logo {
             position: absolute;
             top: 10px;
@@ -139,6 +162,7 @@
             display: none;
             animation: fadeIn 0.3s ease-in-out, fadeOut 0.5s ease-in-out 10s;
             padding: 15px;
+            z-index: 9999; /* Ensure the pop-up is above all other content */
         }
 
         #popup .icon {
@@ -206,6 +230,19 @@
             <p><strong>CAMERA BRAND:</strong> IPCAM HIKVISION</p>
             <p><strong>DATE:</strong> <span id="datetime">--:--:--</span></p>
             <button class="capture-button" id="captureButton">TAKE A PICTURE</button>
+
+            <div class="settings">
+                <h3>Image Settings</h3>
+
+                <label for="brightness">Brightness:</label>
+                <input type="range" id="brightness" name="brightness" min="0.5" max="2" step="0.1" value="1">
+
+                <label for="contrast">Contrast:</label>
+                <input type="range" id="contrast" name="contrast" min="0.5" max="2" step="0.1" value="1">
+
+                <label for="rotation">Rotation Angle:</label>
+                <input type="range" id="rotation" name="rotation" min="-180" max="180" step="1" value="0">
+            </div>
         </div>
         <img src="logoEoh.png" alt="Company Logo" class="logo">
     </div>
@@ -223,7 +260,6 @@
 
     <input type="checkbox" id="humanCheckbox" style="display:none;">
     <script>
-        // JavaScript code remains unchanged
         let lastHumanDetectionValue = null;
 
         function captureImage() {
@@ -300,6 +336,25 @@
             setTimeout(() => {
                 popup.style.display = 'none';
             }, 10000); 
+        }
+
+        // Update image settings based on slider values
+        const brightnessSlider = document.getElementById('brightness');
+        const contrastSlider = document.getElementById('contrast');
+        const rotationSlider = document.getElementById('rotation');
+        const cameraImage = document.getElementById('cameraImage');
+
+        brightnessSlider.addEventListener('input', updateImageSettings);
+        contrastSlider.addEventListener('input', updateImageSettings);
+        rotationSlider.addEventListener('input', updateImageSettings);
+
+        function updateImageSettings() {
+            const brightness = brightnessSlider.value;
+            const contrast = contrastSlider.value;
+            const rotation = rotationSlider.value;
+
+            cameraImage.style.filter = `brightness(${brightness}) contrast(${contrast})`;
+            cameraImage.style.transform = `rotate(${rotation}deg)`;
         }
 
         eraWidget.ready();
