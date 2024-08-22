@@ -159,14 +159,11 @@
     
         // Hàm chụp ảnh và cập nhật ảnh mới từ server sử dụng AJAX
         function captureImage() {
-            // Mở một tab ẩn để truy cập URL chụp ảnh
-            var newWindow = window.open('http://192.168.1.20:5000/capture', '_blank', 'width=100,height=100,top=-1000,left=-1000');
-    
-            // Kiểm tra nếu cửa sổ pop-up được mở thành công
-            if (newWindow) {
-                setTimeout(function() {
-                    newWindow.close();
-                    console.log("Image captured. Closing pop-up window and updating image...");
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", "http://192.168.1.20:5000/capture", true);
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    console.log("Image captured successfully via AJAX.");
     
                     // Cập nhật ảnh mới từ Firebase sau khi chụp mà không reload trang
                     const timestamp = new Date().getTime();
@@ -179,10 +176,11 @@
                         console.log("Image updated:", newImageUrl);
                     };
                     newImg.src = newImageUrl;
-                }, 1000);  // Chờ 1 giây trước khi đóng tab và cập nhật ảnh
-            } else {
-                console.log("Pop-up window was blocked or could not be opened.");
-            }
+                } else if (xhr.readyState == 4) {
+                    console.log("Failed to capture image. Status:", xhr.status);
+                }
+            };
+            xhr.send();
         }
     
         // Cập nhật thời gian hiện tại
@@ -196,6 +194,7 @@
         // Thêm sự kiện click cho nút "TAKE A PICTURE"
         document.getElementById('captureButton').addEventListener('click', captureImage);
     </script>
+    
     
     
     <script>
