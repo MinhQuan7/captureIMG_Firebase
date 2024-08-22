@@ -137,10 +137,11 @@
 
         eraWidget.onValues((values) => {
             // Lấy giá trị humanDetectionSensor từ hệ thống
-            const input = document.getElementById('humanDetectionSensor');
+            if (config && values[config.id]) {
             const humanDetectionValue = values[config.id].value; // Giả sử values[config.id].value là nhịp tim thực tế
-            input.checked = values[config.id].value = humanDetectionValue; 
-
+            document.getElementById('humanDetectionSensor').checked = ecValue > 0;
+            document.getElementById('humanDetectionSensor').value = humanDetectionValue;
+            }
             // Nếu phát hiện người (giá trị bằng 0), thực hiện chụp ảnh
             if (humanDetectionValue == 0) {
                 captureImage();
