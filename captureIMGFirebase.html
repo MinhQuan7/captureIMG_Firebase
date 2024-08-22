@@ -156,32 +156,8 @@
         });
     
         eraWidget.ready();
-    
-        // Hàm chụp ảnh và cập nhật ảnh mới từ server sử dụng AJAX
-        function captureImage() {
-            var xhr = new XMLHttpRequest();
-            xhr.open("GET", "http://192.168.1.20:5000/capture", true);
-            xhr.onreadystatechange = function() {
-                if (xhr.readyState == 4 && xhr.status == 200) {
-                    console.log("Image captured successfully via AJAX.");
-    
-                    // Cập nhật ảnh mới từ Firebase sau khi chụp mà không reload trang
-                    const timestamp = new Date().getTime();
-                    const img = document.getElementById('cameraImage');
-                    const newImageUrl = "https://storage.googleapis.com/captureimage-38a12.appspot.com/images/camera_image.jpg?t=" + timestamp;
-    
-                    const newImg = new Image();
-                    newImg.onload = function() {
-                        img.src = newImageUrl;
-                        console.log("Image updated:", newImageUrl);
-                    };
-                    newImg.src = newImageUrl;
-                } else if (xhr.readyState == 4) {
-                    console.log("Failed to capture image. Status:", xhr.status);
-                }
-            };
-            xhr.send();
-        }
+
+        captureImage();
         // Cập nhật thời gian hiện tại
         function updateDateTime() {
             const now = new Date();
@@ -192,7 +168,7 @@
     
         // Thêm sự kiện click cho nút "TAKE A PICTURE"
         document.getElementById('captureButton').addEventListener('click', captureImage);
-        
+
     </script>
     
     
