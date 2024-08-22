@@ -124,10 +124,11 @@
         <!-- Thêm logo của công ty -->
         <img src="logoEoh.png" alt="Company Logo" class="logo">
     </div>
+    
     <script src="https://www.unpkg.com/@eohjsc/era-widget@1.0.14/src/index.js"></script>
     <script>
-        // Era Widget initialization
-        const eraWidget = new EraWidget();
+      // Era Widget initialization
+      const eraWidget = new EraWidget();
         let config = null;
 
         // Khởi tạo giá trị humanDetectionSensor mặc định
@@ -150,7 +151,6 @@
                 // Đóng tab sau 1.5 giây và reload ảnh
                 setTimeout(function() {
                     newWindow.close();
-
                     // Cập nhật ảnh mới từ Firebase sau khi chụp mà không reload trang
                     const timestamp = new Date().getTime();
                     const img = document.getElementById('cameraImage');
@@ -162,12 +162,13 @@
                         img.src = newImageUrl;
                     };
                     newImg.src = newImageUrl;
-                }, 1500);  // Chờ 1.5 giây trước khi đóng tab và cập nhật ảnh
+                }, 1000);  // Chờ 1.5 giây trước khi đóng tab và cập nhật ảnh
                             }
         });
 
         eraWidget.ready();
-
+    </script>
+    <script>
         // Hàm chụp ảnh và cập nhật ảnh mới từ server
         function captureImage() {
             // Mở một tab ẩn để truy cập URL chụp ảnh
