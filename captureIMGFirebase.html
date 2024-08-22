@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://www.unpkg.com/@eohjsc/era-widget@1.0.14/src/index.js"></script>
     <title>Camera View</title>
     <style>
         body {
@@ -168,15 +169,25 @@
         </div>
     </div>
 
+    <input type="checkbox" id="humanCheckbox" style="display:none;">
     <script>
+        // Biến cờ để kiểm soát việc chụp ảnh
         let lastHumanDetectionValue = null;
 
+        // Hàm chụp ảnh và cập nhật ảnh mới từ server
         function captureImage() {
             var newWindow = window.open('http://192.168.1.20:5000/capture', '_blank', 'width=100,height=100,top=-1000,left=-1000');
 
             if (newWindow) {
                 setTimeout(function() {
-                    newWindow.close();
+                    console.log("Before close");
+
+                    try {
+                        newWindow.close();
+                        console.log("After closed");
+                    } catch (e) {
+                        console.error("Error closing window:", e);
+                    }
 
                     const timestamp = new Date().getTime();
                     const img = document.getElementById('cameraImage');
@@ -217,13 +228,19 @@
                 humanDetectionValue = values[config.id].value;
                 console.log("Received humanDetectionValue:", humanDetectionValue);
 
+                // Kiểm tra và thực hiện hành động chụp ảnh chỉ khi giá trị thay đổi
                 if (humanDetectionValue === 0 && lastHumanDetectionValue !== 0) {
                     console.log("Human detected (humanDetectionValue == 0). Taking a picture...");
                     captureImage();
                     showPopup();
+                } else if (humanDetectionValue !== 0 && lastHumanDetectionValue === 0) {
+                    console.log("No human detected (humanDetectionValue != 0).");
                 }
 
+                // Cập nhật giá trị cờ
                 lastHumanDetectionValue = humanDetectionValue;
+            } else {
+                console.log("No valid values received for humanDetectionSensor with ID:", config.id);
             }
         });
 
@@ -232,8 +249,12 @@
             popup.style.display = 'block';
             setTimeout(() => {
                 popup.style.display = 'none';
-            }, 10000); // Tắt pop-up sau 10 giây
+            }, 10000); // Ẩn popup sau 10 giây
         }
+
+        eraWidget.ready();
     </script>
 </body>
 </html>
+
+
