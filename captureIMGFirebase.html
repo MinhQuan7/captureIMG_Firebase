@@ -125,23 +125,23 @@
         <img src="logoEoh.png" alt="Company Logo" class="logo">
     </div>
     
-    <script src="https://www.unpkg.com/@eohjsc/era-widget@1.0.14/src/index.js"></script>
     <script>
       // Era Widget initialization
-      const eraWidget = new EraWidget();
+        const eraWidget = new EraWidget();
         let config = null;
-
         // Khởi tạo giá trị humanDetectionSensor mặc định
         let humanDetectionValue = 1; 
 
         eraWidget.onConfiguration((configuration) => {
             // Lấy cấu hình cho humanDetectionSensor
-            config = configuration.realtime_configs.find(conf => conf.id == 'humanDetectionSensor');
+            configPh = configuration.realtime_configs.find(config => config.name === 'humanDetectionSensor');
         });
 
         eraWidget.onValues((values) => {
             // Lấy giá trị humanDetectionSensor từ hệ thống
-            humanDetectionValue = values[config.id]?.value;
+            const input = document.getElementById('humanDetectionSensor');
+            humanDetectionValue = values[config.id].value; // Giả sử values[config.id].value là nhịp tim thực tế
+            input.checked = values[config.id].value > 0; 
 
             // Nếu phát hiện người (giá trị bằng 0), thực hiện chụp ảnh
             if (humanDetectionValue == 0) {
@@ -163,7 +163,7 @@
                     };
                     newImg.src = newImageUrl;
                 }, 1000);  // Chờ 1.5 giây trước khi đóng tab và cập nhật ảnh
-                            }
+            }
         });
 
         eraWidget.ready();
