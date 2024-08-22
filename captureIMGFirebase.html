@@ -8,12 +8,34 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #e0f7fa; /* Light blue background to match the room */
+            background-color: #2d2d2d; /* Dark background to enhance light effects */
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
             margin: 0;
+            overflow: hidden;
+        }
+
+        /* Background with moving light effects */
+        body::before {
+            content: '';
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            top: -50%;
+            left: -50%;
+            background: radial-gradient(circle, #ff6b6b, #feca57, #48dbfb, #1dd1a1, #5f27cd, #ff9f43);
+            background-size: 200% 200%;
+            animation: moveBackground 10s linear infinite;
+            z-index: -1;
+            filter: blur(50px);
+        }
+
+        @keyframes moveBackground {
+            0% { background-position: 0% 0%; }
+            50% { background-position: 100% 100%; }
+            100% { background-position: 0% 0%; }
         }
 
         .container {
@@ -21,20 +43,22 @@
             width: 90%;
             border-radius: 20px;
             overflow: hidden;
-            background: #f9f9f9; /* Light neutral background for the container */
-            border: 8px solid #e6e6e6; /* Border color matching the shadow of the room */
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); /* Subtle shadow for a 3D effect */
+            background: rgba(255, 255, 255, 0.1); /* Transparent background */
+            border: 2px solid rgba(255, 255, 255, 0.3); /* Light border */
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6); /* Stronger shadow for 3D effect */
+            backdrop-filter: blur(10px); /* Glassmorphism effect */
             position: relative;
+            z-index: 1;
         }
 
         .camera-view {
             flex: 7;
-            padding: 10px; /* Padding to create space between the image and the container border */
+            padding: 10px;
             display: flex;
             justify-content: center;
             align-items: center;
-            background-color: #ffffff; /* White background inside the camera view */
-            border-right: 8px solid #e6e6e6; /* Divider border */
+            background-color: rgba(255, 255, 255, 0.1); /* Slightly transparent */
+            border-right: 2px solid rgba(255, 255, 255, 0.3); /* Divider border */
             border-radius: 12px;
         }
 
@@ -48,12 +72,12 @@
         .side-panel {
             flex: 3;
             padding: 20px;
-            background: linear-gradient(135deg, #00b3b3, #ff8c00); /* Dynamic gradient background */
+            background: rgba(0, 0, 0, 0.5); /* Darker transparent background */
+            color: white;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: flex-start;
-            color: white;
             border-radius: 12px;
         }
 
@@ -76,23 +100,23 @@
             font-size: 18px;
             font-weight: bold;
             color: white;
-            background-color: #00b3b3;
+            background-color: #ff6b6b; /* Vivid button color */
             border: none;
             border-radius: 50px;
             cursor: pointer;
-            box-shadow: 0 4px 10px rgba(0, 179, 179, 0.3);
+            box-shadow: 0 4px 10px rgba(255, 107, 107, 0.3);
             transition: background-color 0.3s, box-shadow 0.3s;
             margin-top: 20px;
         }
 
         .capture-button:hover {
-            background-color: #008c8c;
-            box-shadow: 0 6px 15px rgba(0, 179, 179, 0.4);
+            background-color: #ee5253;
+            box-shadow: 0 6px 15px rgba(255, 107, 107, 0.4);
         }
 
         .capture-button:active {
-            background-color: #ff8c00;
-            box-shadow: 0 4px 10px rgba(255, 140, 0, 0.3);
+            background-color: #ff9f43;
+            box-shadow: 0 4px 10px rgba(255, 159, 67, 0.3);
         }
 
         .logo {
@@ -109,9 +133,9 @@
             top: 20px;
             right: 20px;
             width: 350px;
-            background-color: #ffffff; /* White background */
+            background-color: rgba(255, 255, 255, 0.9); /* Slightly transparent white */
             border-radius: 10px;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
             display: none;
             animation: fadeIn 0.3s ease-in-out, fadeOut 0.5s ease-in-out 10s;
             padding: 15px;
@@ -149,7 +173,7 @@
 
         .progress-bar {
             height: 5px;
-            background-color: #00b3b3;
+            background-color: #ff6b6b;
             border-radius: 5px;
             width: 0;
             margin-top: 10px;
