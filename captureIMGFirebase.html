@@ -18,7 +18,7 @@
 
         .container {
             display: flex;
-            width: 85%;
+            width: 100%;
             border-radius: 20px;
             overflow: hidden;
             background: linear-gradient(135deg, #00b3b3, #ff8c00); /* Dynamic gradient background */
@@ -107,11 +107,12 @@
             top: 20px;
             right: 20px;
             width: 350px;
-            background-color: #ffffff;
+            background: linear-gradient(135deg, #00b3b3, #ff8c00);
+            background-size: 200% 200%;
             border-radius: 10px;
             box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
             display: none;
-            animation: fadeIn 0.3s ease-in-out, fadeOut 0.5s ease-in-out 10s;
+            animation: fadeIn 0.3s ease-in-out, fadeOut 0.5s ease-in-out 10s, gradientAnimation 10s ease infinite;
             padding: 15px;
         }
 
@@ -167,6 +168,12 @@
         @keyframes progress {
             from { width: 0%; }
             to { width: 100%; }
+        }
+
+        @keyframes gradientAnimation {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
     </style>
 </head>
