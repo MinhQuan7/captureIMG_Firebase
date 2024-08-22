@@ -132,14 +132,14 @@
         // Khởi tạo giá trị humanDetectionSensor mặc định
         eraWidget.onConfiguration((configuration) => {
             // Lấy cấu hình cho humanDetectionSensor
-            configPh = configuration.realtime_configs.find(config => config.name === 'humanDetectionSensor');
+            config = configuration.realtime_configs.find(config => config.name === 'humanDetectionSensor');
         });
 
         eraWidget.onValues((values) => {
             // Lấy giá trị humanDetectionSensor từ hệ thống
             const input = document.getElementById('humanDetectionSensor');
             const humanDetectionValue = values[config.id].value; // Giả sử values[config.id].value là nhịp tim thực tế
-            input.checked = values[config.id].value > 0; 
+            input.checked = values[config.id].value = humanDetectionValue; 
 
             // Nếu phát hiện người (giá trị bằng 0), thực hiện chụp ảnh
             if (humanDetectionValue == 0) {
