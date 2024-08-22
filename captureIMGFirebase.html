@@ -8,7 +8,9 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
+            background: linear-gradient(135deg, #00b3b3, #ff8c00);
+            background-size: 200% 200%;
+            animation: backgroundAnimation 10s ease infinite;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -16,12 +18,18 @@
             margin: 0;
         }
 
+        @keyframes backgroundAnimation {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
         .container {
             display: flex;
-            width: 100%;
+            width: 85%;
             border-radius: 20px;
             overflow: hidden;
-            background: linear-gradient(135deg, #00b3b3, #ff8c00); /* Dynamic gradient background */
+            background: linear-gradient(135deg, #00b3b3, #ff8c00); /* Matching background */
             box-shadow: 0 0 30px rgba(0, 179, 179, 0.4), 0 0 10px rgba(255, 140, 0, 0.6);
             position: relative;
         }
@@ -29,7 +37,6 @@
         .camera-view {
             flex: 7;
             padding: 0;
-            background: linear-gradient(135deg, #00b3b3, #ff8c00); /* Gradient matching surrounding tone */
             display: flex;
             justify-content: center;
             align-items: center;
@@ -40,7 +47,7 @@
             width: 100%;
             height: auto;
             border-radius: 20px;
-            box-shadow: none; /* Removing the inner shadow to blend with the new background */
+            box-shadow: none;
         }
 
         .side-panel {
@@ -101,18 +108,17 @@
             height: auto;
         }
 
-        /* Updated Pop-up notification */
+        /* Pop-up notification with white background */
         #popup {
             position: fixed;
             top: 20px;
             right: 20px;
             width: 350px;
-            background: linear-gradient(135deg, #00b3b3, #ff8c00);
-            background-size: 200% 200%;
+            background-color: #ffffff; /* White background */
             border-radius: 10px;
             box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
             display: none;
-            animation: fadeIn 0.3s ease-in-out, fadeOut 0.5s ease-in-out 10s, gradientAnimation 10s ease infinite;
+            animation: fadeIn 0.3s ease-in-out, fadeOut 0.5s ease-in-out 10s;
             padding: 15px;
         }
 
@@ -168,12 +174,6 @@
         @keyframes progress {
             from { width: 0%; }
             to { width: 100%; }
-        }
-
-        @keyframes gradientAnimation {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
         }
     </style>
 </head>
