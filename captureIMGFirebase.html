@@ -181,8 +181,9 @@
 
             // Đóng tab sau 1.5 giây và reload ảnh
             setTimeout(function() {
+                console.log("Befor close");
                 newWindow.close();
-
+                console.log("After closed");
                 // Cập nhật ảnh mới từ Firebase sau khi chụp mà không reload trang
                 const timestamp = new Date().getTime();
                 const img = document.getElementById('cameraImage');
