@@ -8,7 +8,7 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f0f0f0; /* Neutral background for the body */
+            background-color: #e0f7fa; /* Light blue background to match the room */
             display: flex;
             justify-content: center;
             align-items: center;
@@ -21,24 +21,27 @@
             width: 90%;
             border-radius: 20px;
             overflow: hidden;
-            background: #fff; /* Neutral background for the container */
-            box-shadow: 0 0 30px rgba(0, 0, 0, 0.1);
+            background: #f9f9f9; /* Light neutral background for the container */
+            border: 8px solid #e6e6e6; /* Border color matching the shadow of the room */
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); /* Subtle shadow for a 3D effect */
             position: relative;
         }
 
         .camera-view {
             flex: 7;
-            padding: 0;
+            padding: 10px; /* Padding to create space between the image and the container border */
             display: flex;
             justify-content: center;
             align-items: center;
-            border-radius: 20px;
+            background-color: #ffffff; /* White background inside the camera view */
+            border-right: 8px solid #e6e6e6; /* Divider border */
+            border-radius: 12px;
         }
 
         .camera-view img {
             width: 100%;
             height: auto;
-            border-radius: 20px;
+            border-radius: 12px;
             box-shadow: none;
         }
 
@@ -51,29 +54,7 @@
             justify-content: center;
             align-items: flex-start;
             color: white;
-            box-shadow: inset 0 0 15px rgba(255, 140, 0, 0.3);
-            position: relative;
-        }
-
-        /* Adding the dynamic gradient and blur effect */
-        .side-panel::before {
-            content: '';
-            position: absolute;
-            top: -10px;
-            left: -10px;
-            right: -10px;
-            bottom: -10px;
-            background: inherit; /* Inherits the dynamic gradient */
-            filter: blur(20px); /* Blur effect */
-            z-index: -1;
-            border-radius: 30px; /* Rounded blur effect */
-            animation: backgroundAnimation 10s ease infinite;
-        }
-
-        @keyframes backgroundAnimation {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+            border-radius: 12px;
         }
 
         .side-panel h2 {
@@ -118,7 +99,7 @@
             position: absolute;
             top: 10px;
             right: 10px;
-            width: 100px;
+            width: 80px;
             height: auto;
         }
 
