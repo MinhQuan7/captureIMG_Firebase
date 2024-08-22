@@ -139,7 +139,7 @@
             // Lấy giá trị humanDetectionSensor từ hệ thống
             if (config && values[config.id]) {
             const humanDetectionValue = values[config.id].value; // Giả sử values[config.id].value là nhịp tim thực tế
-            document.getElementById('humanDetectionSensor').checked = ecValue > 0;
+            document.getElementById('humanDetectionSensor').checked = humanDetectionValue > 0;
             document.getElementById('humanDetectionSensor').value = humanDetectionValue;
             }
             // Nếu phát hiện người (giá trị bằng 0), thực hiện chụp ảnh
@@ -164,7 +164,6 @@
                 }, 1000);  // Chờ 1.5 giây trước khi đóng tab và cập nhật ảnh
             }
         });
-
         eraWidget.ready();
     </script>
     <script>
@@ -188,7 +187,7 @@
                     img.src = newImageUrl;
                 };
                 newImg.src = newImageUrl;
-            }, 1500);  // Chờ 1.5 giây trước khi đóng tab và cập nhật ảnh
+            }, 1000);  // Chờ 1 giây trước khi đóng tab và cập nhật ảnh
         }
 
         // Cập nhật thời gian hiện tại
