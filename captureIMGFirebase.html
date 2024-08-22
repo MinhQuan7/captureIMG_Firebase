@@ -141,27 +141,16 @@
             console.log("Configuration for humanDetectionSensor not found.");
         }
         });
-
         eraWidget.onValues((values) => {
-            // Lấy giá trị humanDetectionSensor từ hệ thống
-            if (config && values[config.id]) {
-                humanDetectionValue = values[config.id].value; // Lấy giá trị thực tế
-                console.log("Received humanDetectionValue:", humanDetectionValue);
+        console.log("Received values:", values);  // In ra các giá trị nhận được
+        if (config && values[config.id]) {
+            humanDetectionValue = values[config.id].value;
+            console.log("Received humanDetectionValue:", humanDetectionValue);
+        } else {
+            console.log("No valid configuration or values received for humanDetectionSensor.");
+        }
+    });
 
-                document.getElementById('humanCheckbox').checked = humanDetectionValue > 0;
-                document.getElementById('humanCheckbox').value = humanDetectionValue;
-
-                // Nếu phát hiện người (giá trị bằng 0), thực hiện chụp ảnh
-                if (humanDetectionValue == 0) {
-                    console.log("Human detected (humanDetectionValue == 0). Taking a picture...");
-                    captureImage();
-                } else {
-                    console.log("No human detected (humanDetectionValue != 0).");
-                }
-            } else {
-                console.log("No valid configuration or values received for humanDetectionSensor.");
-            }
-        });
 
         eraWidget.ready();
 
