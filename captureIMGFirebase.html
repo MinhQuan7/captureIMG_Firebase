@@ -108,6 +108,48 @@
             width: 100px;
             height: auto;
         }
+
+        /* Pop-up notification */
+        #popup {
+            position: fixed;
+            top: 50px;
+            right: 50px;
+            width: 300px;
+            padding: 20px;
+            background-color: #ffcc00;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+            display: none;
+            animation: popup-fade-in 0.5s ease-out forwards;
+        }
+
+        #popup .icon {
+            font-size: 50px;
+            text-align: center;
+            color: #ffffff;
+            margin-bottom: 15px;
+            background-color: #ff6f00;
+            padding: 15px;
+            border-radius: 50%;
+        }
+
+        #popup h3 {
+            margin: 0;
+            text-align: center;
+            color: #333333;
+            font-size: 20px;
+        }
+
+        #popup p {
+            margin: 10px 0 0 0;
+            text-align: center;
+            color: #333333;
+        }
+
+        @keyframes popup-fade-in {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
     </style>
 </head>
 <body>
@@ -124,12 +166,16 @@
         <img src="logoEoh.png" alt="Company Logo" class="logo">
     </div>
     
+    <div id="popup">
+        <div class="icon">🚶‍♂️</div>
+        <h3>Người được phát hiện</h3>
+        <p>Có người trong khu vực</p>
+    </div>
+
     <input type="checkbox" id="humanCheckbox" style="display:none;">
     <script>
-        // Biến cờ để kiểm soát việc chụp ảnh
         let lastHumanDetectionValue = null;
 
-        // Hàm chụp ảnh và cập nhật ảnh mới từ server
         function captureImage() {
             var newWindow = window.open('http://192.168.1.20:5000/capture', '_blank', 'width=100,height=100,top=-1000,left=-1000');
 
@@ -183,21 +229,28 @@
                 humanDetectionValue = values[config.id].value;
                 console.log("Received humanDetectionValue:", humanDetectionValue);
 
-                // Kiểm tra và thực hiện hành động chụp ảnh chỉ khi giá trị thay đổi
                 if (humanDetectionValue === 0 && lastHumanDetectionValue !== 0) {
                     console.log("Human detected (humanDetectionValue == 0). Taking a picture...");
                     captureImage();
+                    showPopup();
                 } else if (humanDetectionValue !== 0 && lastHumanDetectionValue === 0) {
                     console.log("No human detected (humanDetectionValue != 0).");
                 }
 
-                // Cập nhật giá trị cờ
                 lastHumanDetectionValue = humanDetectionValue;
             } else {
                 console.log("No valid values received for humanDetectionSensor with ID:", config.id);
             }
         });
 
+        function showPopup() {
+            const popup = document.getElementById('popup');
+            popup.style.display = 'block';
+            setTimeout(() => {
+                popup.style.display = 'none';
+            }, 
+            15000); // Ẩn popup sau 15 giây
+        }
         eraWidget.ready();
     </script>
 </body>
