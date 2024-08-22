@@ -3,26 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://www.unpkg.com/@eohjsc/era-widget@1.0.14/src/index.js"></script>
     <title>Camera View</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #ffffff;
+            background-color: #f0f0f0;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
             margin: 0;
-            background: linear-gradient(-45deg, #ff8c00, #00b3b3, #ff8c00, #00b3b3);
-            background-size: 400% 400%;
-            animation: gradient 15s ease infinite;
-        }
-
-        @keyframes gradient {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
         }
 
         .container {
@@ -112,42 +102,44 @@
         /* Pop-up notification */
         #popup {
             position: fixed;
-            top: 50px;
-            right: 50px;
+            top: 20px;
+            right: 20px;
             width: 300px;
-            padding: 20px;
-            background-color: #ffcc00;
+            background-color: #ffffff;
             border-radius: 10px;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
             display: none;
-            animation: popup-fade-in 0.5s ease-out forwards;
+            animation: fadeIn 0.3s ease-in-out;
         }
 
         #popup .icon {
-            font-size: 50px;
+            font-size: 24px;
             text-align: center;
-            color: #ffffff;
-            margin-bottom: 15px;
-            background-color: #ff6f00;
+            color: #ffcc00;
             padding: 15px;
-            border-radius: 50%;
+            border-right: 1px solid #e0e0e0;
         }
 
         #popup h3 {
             margin: 0;
-            text-align: center;
+            padding: 15px;
+            font-size: 18px;
             color: #333333;
-            font-size: 20px;
         }
 
         #popup p {
-            margin: 10px 0 0 0;
-            text-align: center;
-            color: #333333;
+            margin: 0;
+            padding: 0 15px 15px;
+            color: #666666;
         }
 
-        @keyframes popup-fade-in {
-            from { opacity: 0; transform: translateY(-20px); }
+        .popup-content {
+            display: flex;
+            align-items: center;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
             to { opacity: 1; transform: translateY(0); }
         }
     </style>
@@ -167,12 +159,15 @@
     </div>
     
     <div id="popup">
-        <div class="icon">🚶‍♂️</div>
-        <h3>Người được phát hiện</h3>
-        <p>Có người trong khu vực</p>
+        <div class="popup-content">
+            <div class="icon">🚶‍♂️</div>
+            <div>
+                <h3>Người được phát hiện</h3>
+                <p>Có người trong khu vực</p>
+            </div>
+        </div>
     </div>
 
-    <input type="checkbox" id="humanCheckbox" style="display:none;">
     <script>
         let lastHumanDetectionValue = null;
 
@@ -181,14 +176,7 @@
 
             if (newWindow) {
                 setTimeout(function() {
-                    console.log("Before close");
-
-                    try {
-                        newWindow.close();
-                        console.log("After closed");
-                    } catch (e) {
-                        console.error("Error closing window:", e);
-                    }
+                    newWindow.close();
 
                     const timestamp = new Date().getTime();
                     const img = document.getElementById('cameraImage');
@@ -233,13 +221,9 @@
                     console.log("Human detected (humanDetectionValue == 0). Taking a picture...");
                     captureImage();
                     showPopup();
-                } else if (humanDetectionValue !== 0 && lastHumanDetectionValue === 0) {
-                    console.log("No human detected (humanDetectionValue != 0).");
                 }
 
                 lastHumanDetectionValue = humanDetectionValue;
-            } else {
-                console.log("No valid values received for humanDetectionSensor with ID:", config.id);
             }
         });
 
@@ -248,10 +232,8 @@
             popup.style.display = 'block';
             setTimeout(() => {
                 popup.style.display = 'none';
-            }, 
-            15000); // Ẩn popup sau 15 giây
+            }, 10000); // Tắt pop-up sau 10 giây
         }
-        eraWidget.ready();
     </script>
 </body>
 </html>
