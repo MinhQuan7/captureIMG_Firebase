@@ -269,6 +269,15 @@
     <input type="checkbox" id="humanCheckbox" style="display:none;">
     <script>
         let lastHumanDetectionValue = null;
+        let detectionCount = localStorage.getItem('detectionCount');
+
+        if (detectionCount === null || isNaN(detectionCount)) {
+            detectionCount = 0;
+        } else {
+            detectionCount = parseInt(detectionCount, 10);
+        }
+
+        document.getElementById('detectionCount').textContent = detectionCount;
 
         function captureImage() {
             var newWindow = window.open('http://192.168.4.117:5000/capture', '_blank', 'width=100,height=100,top=-1000,left=-1000');
@@ -327,11 +336,7 @@
                     console.log("Human detected (humanDetectionValue == 0). Taking a picture...");
                     captureImage();
                     showPopup();
-                    detectionCount++;
-                    document.getElementById('detectionCount').textContent = detectionCount;
-                    localStorage.setItem('detectionCount', detectionCount);
-                } else if (humanDetectionValue !== 0 && lastHumanDetectionValue === 0) {
-                    console.log("No human detected (humanDetectionValue != 0).");
+                    updateDetectionCount();
                 }
 
                 lastHumanDetectionValue = humanDetectionValue;
@@ -349,44 +354,19 @@
             }, 10000); 
         }
 
-        // Update image settings based on slider values
-        const brightnessSlider = document.getElementById('brightness');
-        const contrastSlider = document.getElementById('contrast');
-        const rotationSlider = document.getElementById('rotation');
-        const cameraImage = document.getElementById('cameraImage');
-
-        brightnessSlider.addEventListener('input', updateImageSettings);
-        contrastSlider.addEventListener('input', updateImageSettings);
-        rotationSlider.addEventListener('input', updateImageSettings);
-
-        function updateImageSettings() {
-            const brightness = brightnessSlider.value;
-            const contrast = contrastSlider.value;
-            const rotation = rotationSlider.value;
-
-            cameraImage.style.filter = `brightness(${brightness}) contrast(${contrast})`;
-            cameraImage.style.transform = `rotate(${rotation}deg)`;
-        }
-
-        eraWidget.ready();
-
-        //__________Local Storage : human presence count_________________
-        // Reset detection count at midnight
-        let detectionCount = parseInt(localStorage.getItem('detectionCount'), 10) || 0;
-        document.getElementById('detectionCount').textContent = detectionCount; 
-
         function updateDetectionCount() {
-        detectionCount++;
-        document.getElementById('detectionCount').textContent = detectionCount;
-        localStorage.setItem('detectionCount', detectionCount);
-        }
-        function resetDetectionCount() {
-        const now = new Date(); // Neu thoi gian hien tai ma da qua ngay moi tuc da qua 24h
-        if (now.getHours() === 0 && now.getMinutes() === 0) {
-            detectionCount = 0;
-            localStorage.setItem('detectionCount', detectionCount);
+            detectionCount++;
             document.getElementById('detectionCount').textContent = detectionCount;
+            localStorage.setItem('detectionCount', detectionCount);
         }
+
+        function resetDetectionCount() {
+            const now = new Date(); 
+            if (now.getHours() === 0 && now.getMinutes() === 0) {
+                detectionCount = 0;
+                localStorage.setItem('detectionCount', detectionCount);
+                document.getElementById('detectionCount').textContent = detectionCount;
+            }
         }
         setInterval(resetDetectionCount, 60000); // Check every minute
 
