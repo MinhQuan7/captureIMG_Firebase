@@ -236,7 +236,7 @@
             <h2>CAMERA DETAILS</h2>
             <p><strong>CAMERA BRAND:</strong> IPCAM HIKVISION</p>
             <p><strong>DATE:</strong> <span id="datetime">--:--:--</span></p>
-            <p class="detection-count">Detections Today: <span id="detectionCount">0</span></p> <!-- Moved this line -->
+            <p class="detection-count"><strong>Detections Today: </strong><span id="detectionCount">0</span></p> <!-- Moved this line -->
             <button class="capture-button" id="captureButton">TAKE A PICTURE</button>
 
             <div class="settings">
@@ -372,8 +372,16 @@
 
         //__________Local Storage : human presence count_________________
         // Reset detection count at midnight
+        let detectionCount = parseInt(localStorage.getItem('detectionCount'), 10) || 0;
+        document.getElementById('detectionCount').textContent = detectionCount; 
+
+        function updateDetectionCount() {
+        detectionCount++;
+        document.getElementById('detectionCount').textContent = detectionCount;
+        localStorage.setItem('detectionCount', detectionCount);
+        }
         function resetDetectionCount() {
-        const now = new Date();
+        const now = new Date(); // Neu thoi gian hien tai ma da qua ngay moi tuc da qua 24h
         if (now.getHours() === 0 && now.getMinutes() === 0) {
             detectionCount = 0;
             localStorage.setItem('detectionCount', detectionCount);
