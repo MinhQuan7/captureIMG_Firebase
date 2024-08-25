@@ -523,7 +523,19 @@
                 document.getElementById('passwordError').style.display = "block";
             }
         }
+        document.getElementById('brightness').addEventListener('input', updateImageSettings);
+        document.getElementById('contrast').addEventListener('input', updateImageSettings);
+        document.getElementById('rotation').addEventListener('input', updateImageSettings);
 
+        function updateImageSettings() {
+            const brightness = document.getElementById('brightness').value;
+            const contrast = document.getElementById('contrast').value;
+            const rotation = document.getElementById('rotation').value;
+
+            const img = document.getElementById('cameraImage');
+            img.style.filter = `brightness(${brightness}) contrast(${contrast})`;
+            img.style.transform = `rotate(${rotation}deg)`;
+        }
         setInterval(resetDetectionCount, 60000); // Check every minute
 
     </script>
