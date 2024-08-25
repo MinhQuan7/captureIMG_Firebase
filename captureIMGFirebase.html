@@ -204,6 +204,13 @@
             animation: progress 10s linear forwards;
         }
 
+        /*___________Dem so lan detection______________*/
+        .detection-count {
+            margin-top: 10px;
+            font-size: 20px;
+            text-align: center;
+        }
+
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(-10px); }
             to { opacity: 1; transform: translateY(0); }
@@ -229,6 +236,7 @@
             <h2>CAMERA DETAILS</h2>
             <p><strong>CAMERA BRAND:</strong> IPCAM HIKVISION</p>
             <p><strong>DATE:</strong> <span id="datetime">--:--:--</span></p>
+            <p class="detection-count">Detections Today: <span id="detectionCount">0</span></p> <!-- Moved this line -->
             <button class="capture-button" id="captureButton">TAKE A PICTURE</button>
 
             <div class="settings">
@@ -319,6 +327,9 @@
                     console.log("Human detected (humanDetectionValue == 0). Taking a picture...");
                     captureImage();
                     showPopup();
+                    detectionCount++;
+                    document.getElementById('detectionCount').textContent = detectionCount;
+                    localStorage.setItem('detectionCount', detectionCount);
                 } else if (humanDetectionValue !== 0 && lastHumanDetectionValue === 0) {
                     console.log("No human detected (humanDetectionValue != 0).");
                 }
@@ -358,6 +369,19 @@
         }
 
         eraWidget.ready();
+
+        //__________Local Storage : human presence count_________________
+        // Reset detection count at midnight
+        function resetDetectionCount() {
+        const now = new Date();
+        if (now.getHours() === 0 && now.getMinutes() === 0) {
+            detectionCount = 0;
+            localStorage.setItem('detectionCount', detectionCount);
+            document.getElementById('detectionCount').textContent = detectionCount;
+        }
+        }
+        setInterval(resetDetectionCount, 60000); // Check every minute
+
     </script>
 </body>
 </html>
