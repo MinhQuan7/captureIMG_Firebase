@@ -222,6 +222,56 @@
             from { width: 0%; }
             to { width: 100%; }
         }
+         /* Modal styles */
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 9999;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgb(0,0,0);
+        background-color: rgba(0,0,0,0.4);
+        padding-top: 60px;
+    }
+
+    .modal-content {
+        background-color: #fefefe;
+        margin: 5% auto;
+        padding: 20px;
+        border: 1px solid #888;
+        width: 80%;
+        max-width: 300px;
+        text-align: center;
+        border-radius: 10px;
+    }
+
+    .close {
+        color: #aaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+    }
+
+    .close:hover,
+    .close:focus {
+        color: black;
+        text-decoration: none;
+        cursor: pointer;
+    }
+
+    #passwordInput {
+        width: 100%;
+        padding: 12px;
+        margin: 8px 0;
+        box-sizing: border-box;
+    }
+
+    #togglePassword, #submitPassword, #cancelPassword {
+        margin: 5px;
+    }
     </style>
 </head>
 <body>
@@ -234,6 +284,19 @@
             <p><strong>CAMERA BRAND:</strong> IPCAM HIKVISION</p>
             <p><strong>DATE:</strong> <span id="datetime">--:--:--</span></p>
             <p class="detection-count"><strong>Detections Today: </strong><span id="detectionCount">0</span></p>
+            <p id="lastAppearance"><strong>The last time someone appeared: </strong><a href="#" id="lastImageLink" target="_blank" onclick="return showPasswordPrompt()">View Image</a></p>
+                <!-- Password prompt modal -->
+        <div id="passwordModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closePasswordPrompt()">&times;</span>
+            <h3>Enter Password</h3>
+            <input type="password" id="passwordInput" placeholder="Enter password">
+            <button id="togglePassword" onclick="togglePasswordVisibility()">👁️</button>
+            <button id="submitPassword" onclick="checkPassword()">Submit</button>
+            <button id="cancelPassword" onclick="closePasswordPrompt()">Cancel</button>
+            <p id="passwordError" style="color:red; display:none;">Incorrect password. Please try again.</p>
+        </div>
+        </div>
             <button class="capture-button" id="captureButton">TAKE A PICTURE</button>
 
             <div class="settings">
@@ -270,34 +333,35 @@
 
         document.getElementById('detectionCount').textContent = detectionCount;
 
-        function captureImage() {
-            var newWindow = window.open('http://192.168.4.117:5000/capture', '_blank', 'width=100,height=100,top=-1000,left=-1000');
+    function captureImage() {
+    var newWindow = window.open('http://192.168.4.117:5000/capture', '_blank', 'width=100,height=100,top=-1000,left=-1000');
 
-            if (newWindow) {
-                setTimeout(function() {
-                    console.log("Before close");
+    if (newWindow) {
+        setTimeout(function() {
+            console.log("Before close");
 
-                    try {
-                        newWindow.close();
-                        console.log("After closed");
-                    } catch (e) {
-                        console.error("Error closing window:", e);
-                    }
-
-                    const timestamp = new Date().getTime();
-                    const img = document.getElementById('cameraImage');
-                    const newImageUrl = "https://storage.googleapis.com/captureimage-38a12.appspot.com/images/camera_image.jpg?t=" + timestamp;
-
-                    const newImg = new Image();
-                    newImg.onload = function() {
-                        img.src = newImageUrl;
-                    };
-                    newImg.src = newImageUrl;
-                }, 500); 
-            } else {
-                console.log("Pop-up window was blocked or could not be opened.");
+            try {
+                newWindow.close();
+                console.log("After closed");
+            } catch (e) {
+                console.error("Error closing window:", e);
             }
-        }
+
+            const timestamp = new Date().getTime();
+            const img = document.getElementById('cameraImage');
+            const newImageUrl = "https://storage.googleapis.com/captureimage-38a12.appspot.com/images/camera_image.jpg?t=" + timestamp;
+
+            const newImg = new Image();
+            newImg.onload = function() {
+                img.src = newImageUrl;
+                updateLastAppearance(newImageUrl); // Update the last appearance link
+            };
+            newImg.src = newImageUrl;
+        }, 500); 
+    } else {
+        console.log("Pop-up window was blocked or could not be opened.");
+    }
+}
 
         function updateDateTime() {
             const now = new Date();
@@ -359,6 +423,43 @@
                 document.getElementById('detectionCount').textContent = detectionCount;
             }
         }
+        let lastImageUrl = "https://console.firebase.google.com/u/0/project/captureimage-38a12/storage/captureimage-38a12.appspot.com/files/~2Fimages"; // This will hold the URL to the last image captured
+        let correctPassword = "eoh"; // Set your desired password here
+
+        function updateLastAppearance(imageUrl) {
+            lastImageUrl = imageUrl;
+            document.getElementById('lastImageLink').href = lastImageUrl;
+            const now = new Date();
+            document.getElementById('lastAppearance').textContent = `The last time someone appeared: ${now.toLocaleString()}`;
+        }
+
+        function showPasswordPrompt() {
+            document.getElementById('passwordModal').style.display = "block";
+            return false; // Prevent the link from navigating
+        }
+
+        function closePasswordPrompt() {
+            document.getElementById('passwordModal').style.display = "none";
+            document.getElementById('passwordError').style.display = "none";
+            document.getElementById('passwordInput').value = ""; // Clear the input field
+        }
+
+        function togglePasswordVisibility() {
+            const passwordInput = document.getElementById('passwordInput');
+            const type = passwordInput.type === 'password' ? 'text' : 'password';
+            passwordInput.type = type;
+        }
+
+        function checkPassword() {
+            const enteredPassword = document.getElementById('passwordInput').value;
+            if (enteredPassword === correctPassword) {
+                closePasswordPrompt();
+                window.open(lastImageUrl, "_blank");
+            } else {
+                document.getElementById('passwordError').style.display = "block";
+            }
+        }
+
         setInterval(resetDetectionCount, 60000); // Check every minute
 
     </script>
