@@ -62,12 +62,11 @@
             position: relative;
         }
 
-        .camera-view img {
+        .camera-view canvas {
             width: 100%;
             height: auto;
             border-radius: 12px;
             box-shadow: none;
-            transition: filter 0.3s, transform 0.3s;
         }
 
         .side-panel {
@@ -296,18 +295,18 @@
             display: none;
             margin-top: 10px;
         }
-        /* Style for the "View Image" link */
+
         #lastImageLink {
-            color: #ff6b6b; /* Matches the button color */
-            text-decoration: none; /* Removes underline */
+            color: #ff6b6b;
+            text-decoration: none;
             font-weight: bold;
-            transition: color 0.3s, transform 0.3s; /* Smooth transition for hover effect */
+            transition: color 0.3s, transform 0.3s;
         }
 
         #lastImageLink:hover {
-            color: #ee5253; /* Slightly darker on hover */
-            transform: scale(1.1); /* Slightly enlarges on hover */
-            text-decoration: underline; /* Adds underline on hover */
+            color: #ee5253;
+            transform: scale(1.1);
+            text-decoration: underline;
         }
 
         @keyframes fadeIn {
@@ -336,7 +335,6 @@
         <div class="camera-view">
             <canvas id="cameraCanvas"></canvas>
         </div>
-        
         <div class="side-panel">
             <h2>CAMERA DETAILS</h2>
             <p><strong>CAMERA BRAND:</strong> IPCAM HIKVISION</p>
@@ -397,40 +395,23 @@
         document.getElementById('detectionCount').textContent = detectionCount;
 
         function captureImage() {
-        var newWindow = window.open('http://192.168.137.1:5000/capture', '_blank', 'width=100,height=100,top=-1000,left=-1000');
-
-        if (newWindow) {
             const timestamp = new Date().getTime();
-            const newImageUrl = "https://storage.googleapis.com/captureimage-38a12.appspot.com/images/camera_image.jpg?t=" + timestamp;
+            const imgUrl = "https://storage.googleapis.com/captureimage-38a12.appspot.com/images/camera_image.jpg?t=" + timestamp;
 
             const img = new Image();
+            img.crossOrigin = "Anonymous"; // Đảm bảo không có lỗi CORS khi vẽ ảnh lên canvas
             img.onload = function() {
-                // Lấy đối tượng canvas và ngữ cảnh 2D
                 const canvas = document.getElementById('cameraCanvas');
                 const ctx = canvas.getContext('2d');
-                
-                // Đặt kích thước canvas khớp với kích thước ảnh
                 canvas.width = img.width;
                 canvas.height = img.height;
-                
-                // Vẽ ảnh lên canvas
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
                 ctx.drawImage(img, 0, 0, img.width, img.height);
 
-                // Cập nhật liên kết ảnh cuối cùng
-                updateLastAppearance(newImageUrl); 
+                updateLastAppearance(imgUrl); // Cập nhật liên kết ảnh cuối cùng
             };
-            img.src = newImageUrl;
-
-            try {
-                newWindow.close();
-            } catch (e) {
-                console.error("Error closing window:", e);
-            }
-        } else {
-            console.log("Pop-up window was blocked or could not be opened.");
+            img.src = imgUrl;
         }
-}
-
 
         function updateLastAppearance(imageUrl) {
             lastImageUrl = imageUrl;
@@ -530,6 +511,7 @@
                 document.getElementById('passwordError').style.display = "block";
             }
         }
+
         document.getElementById('brightness').addEventListener('input', updateImageSettings);
         document.getElementById('contrast').addEventListener('input', updateImageSettings);
         document.getElementById('rotation').addEventListener('input', updateImageSettings);
@@ -539,9 +521,15 @@
             const contrast = document.getElementById('contrast').value;
             const rotation = document.getElementById('rotation').value;
 
-            const img = document.getElementById('cameraImage');
-            img.style.filter = `brightness(${brightness}) contrast(${contrast})`;
-            img.style.transform = `rotate(${rotation}deg)`;
+            const canvas = document.getElementById('cameraCanvas');
+            const ctx = canvas.getContext('2d');
+            ctx.filter = `brightness(${brightness}) contrast(${contrast})`;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.save();
+            ctx.translate(canvas.width / 2, canvas.height / 2);
+            ctx.rotate(rotation * Math.PI / 180);
+            ctx.drawImage(img, -img.width / 2, -img.height / 2, img.width, img.height);
+            ctx.restore();
         }
         setInterval(resetDetectionCount, 60000); // Check every minute
 
