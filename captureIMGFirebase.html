@@ -334,8 +334,9 @@
 <body>
     <div class="container">
         <div class="camera-view">
-            <img id="cameraImage" src="https://storage.googleapis.com/captureimage-38a12.appspot.com/images/camera_image.jpg?t=0" alt="Ảnh từ camera">
+            <canvas id="cameraCanvas"  src="https://storage.googleapis.com/captureimage-38a12.appspot.com/images/camera_image.jpg?t=0" alt="Ảnh từ camera"></canvas>
         </div>
+        
         <div class="side-panel">
             <h2>CAMERA DETAILS</h2>
             <p><strong>CAMERA BRAND:</strong> IPCAM HIKVISION</p>
@@ -396,34 +397,40 @@
         document.getElementById('detectionCount').textContent = detectionCount;
 
         function captureImage() {
-            var newWindow = window.open('http://192.168.1.36:5000/capture', '_blank', 'width=100,height=100,top=-1000,left=-1000');
+        var newWindow = window.open('http://192.168.1.36:5000/capture', '_blank', 'width=100,height=100,top=-1000,left=-1000');
 
-            if (newWindow) {
-                setTimeout(function() {
-                    console.log("Before close");
+        if (newWindow) {
+            const timestamp = new Date().getTime();
+            const newImageUrl = "https://storage.googleapis.com/captureimage-38a12.appspot.com/images/camera_image.jpg?t=" + timestamp;
 
-                    try {
-                        newWindow.close();
-                        console.log("After closed");
-                    } catch (e) {
-                        console.error("Error closing window:", e);
-                    }
+            const img = new Image();
+            img.onload = function() {
+                // Lấy đối tượng canvas và ngữ cảnh 2D
+                const canvas = document.getElementById('cameraCanvas');
+                const ctx = canvas.getContext('2d');
+                
+                // Đặt kích thước canvas khớp với kích thước ảnh
+                canvas.width = img.width;
+                canvas.height = img.height;
+                
+                // Vẽ ảnh lên canvas
+                ctx.drawImage(img, 0, 0, img.width, img.height);
 
-                    const timestamp = new Date().getTime();
-                    const img = document.getElementById('cameraImage');
-                    const newImageUrl = "https://storage.googleapis.com/captureimage-38a12.appspot.com/images/camera_image.jpg?t=" + timestamp;
+                // Cập nhật liên kết ảnh cuối cùng
+                updateLastAppearance(newImageUrl); 
+            };
+            img.src = newImageUrl;
 
-                    const newImg = new Image();
-                    newImg.onload = function() {
-                        img.src = newImageUrl;
-                        updateLastAppearance(newImageUrl); // Update the last appearance link
-                    };
-                    newImg.src = newImageUrl;
-                }, 500); 
-            } else {
-                console.log("Pop-up window was blocked or could not be opened.");
+            try {
+                newWindow.close();
+            } catch (e) {
+                console.error("Error closing window:", e);
             }
+        } else {
+            console.log("Pop-up window was blocked or could not be opened.");
         }
+}
+
 
         function updateLastAppearance(imageUrl) {
             lastImageUrl = imageUrl;
