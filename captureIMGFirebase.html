@@ -395,27 +395,51 @@
 
         document.getElementById('detectionCount').textContent = detectionCount;
 
-        async function captureImage() {
-            try {
-                const response = await fetch('http://192.168.1.36:5000/capture');
-                if (response.ok) {
-                    const timestamp = new Date().getTime();
-                    const img = document.getElementById('cameraImage');
-                    const newImageUrl = "https://storage.googleapis.com/captureimage-38a12.appspot.com/images/camera_image.jpg?t=" + timestamp;
+        function captureImage() {
+    let attempts = 0;
+    const maxAttempts = 5; // Số lần thử tối đa để đảm bảo lấy được ảnh mới
 
-                    const newImg = new Image();
-                    newImg.onload = function() {
+    function attemptCapture() {
+        var newWindow = window.open('http://192.168.1.36:5000/capture', '_blank', 'width=100,height=100,top=-1000,left=-1000');
+
+        if (newWindow) {
+            setTimeout(function() {
+                console.log("Before close");
+
+                try {
+                    newWindow.close();
+                    console.log("After closed");
+                } catch (e) {
+                    console.error("Error closing window:", e);
+                }
+
+                const timestamp = new Date().getTime();
+                const img = document.getElementById('cameraImage');
+                const newImageUrl = "https://storage.googleapis.com/captureimage-38a12.appspot.com/images/camera_image.jpg?t=" + timestamp;
+
+                const newImg = new Image();
+                newImg.onload = function() {
+                    const currentSrc = img.src.split("?t=")[0];
+                    const newSrc = newImageUrl.split("?t=")[0];
+
+                    if (currentSrc !== newSrc || attempts >= maxAttempts) {
                         img.src = newImageUrl;
                         updateLastAppearance(newImageUrl); // Update the last appearance link
-                    };
-                    newImg.src = newImageUrl;
-                } else {
-                    console.error('Failed to capture image:', response.statusText);
-                }
-            } catch (error) {
-                console.error('Error capturing image:', error);
-            }
+                    } else {
+                        attempts++;
+                        console.log("Image not updated, retrying... Attempt:", attempts);
+                        attemptCapture(); // Thử lại nếu ảnh chưa được cập nhật
+                    }
+                };
+                newImg.src = newImageUrl;
+            }, 500);
+        } else {
+            console.log("Pop-up window was blocked or could not be opened.");
         }
+    }
+    attemptCapture(); // Bắt đầu quy trình chụp ảnh
+}
+
 
         function updateLastAppearance(imageUrl) {
             lastImageUrl = imageUrl;
