@@ -395,20 +395,10 @@
 
         document.getElementById('detectionCount').textContent = detectionCount;
 
-        function captureImage() {
-            var newWindow = window.open('http://192.168.1.36:5000/capture', '_blank', 'width=100,height=100,top=-1000,left=-1000');
-
-            if (newWindow) {
-                setTimeout(function() {
-                    console.log("Before close");
-
-                    try {
-                        newWindow.close();
-                        console.log("After closed");
-                    } catch (e) {
-                        console.error("Error closing window:", e);
-                    }
-
+        async function captureImage() {
+            try {
+                const response = await fetch('http://192.168.1.36:5000/capture');
+                if (response.ok) {
                     const timestamp = new Date().getTime();
                     const img = document.getElementById('cameraImage');
                     const newImageUrl = "https://storage.googleapis.com/captureimage-38a12.appspot.com/images/camera_image.jpg?t=" + timestamp;
@@ -419,9 +409,11 @@
                         updateLastAppearance(newImageUrl); // Update the last appearance link
                     };
                     newImg.src = newImageUrl;
-                }, 500); 
-            } else {
-                console.log("Pop-up window was blocked or could not be opened.");
+                } else {
+                    console.error('Failed to capture image:', response.statusText);
+                }
+            } catch (error) {
+                console.error('Error capturing image:', error);
             }
         }
 
@@ -486,15 +478,21 @@
         }
 
         function resetDetectionCount() {
-            const now = new Date(); 
-            if (now.getHours() === 0 && now.getMinutes() === 0) {
-                detectionCount = 0;
-                localStorage.setItem('detectionCount', detectionCount);
-                document.getElementById('detectionCount').textContent = detectionCount;
-            }
+        const now = new Date(); 
+        const hours = now.getHours();
+        const minutes = now.getMinutes();
+        const seconds = now.getSeconds();
+
+        // Kiểm tra nếu thời gian là 00:00:00 (nửa đêm)
+        if (hours === 0 && minutes === 0 && seconds === 0) {
+            detectionCount = 0;
+            localStorage.setItem('detectionCount', detectionCount);
+            document.getElementById('detectionCount').textContent = detectionCount;
+            console.log('Detection count has been reset to 0 at midnight.');
+        }
         }
 
-        let lastImageUrl = ""; // This will hold the URL to the last image captured
+        let lastImageUrl = "https://storage.googleapis.com/captureimage-38a12.appspot.com/images/camera_image.jpg?t="; // This will hold the URL to the last image captured
         let correctPassword = "eoh"; // Set your desired password here
 
         function showPasswordPrompt() {
@@ -535,7 +533,7 @@
             img.style.filter = `brightness(${brightness}) contrast(${contrast})`;
             img.style.transform = `rotate(${rotation}deg)`;
         }
-        setInterval(resetDetectionCount, 60000); // Check every minute
+        setInterval(resetDetectionCount, 1000); // Check every minute
 
     </script>
 </body>
