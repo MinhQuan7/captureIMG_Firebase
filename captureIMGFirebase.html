@@ -395,7 +395,7 @@
 
         document.getElementById('detectionCount').textContent = detectionCount;
 
-        function captureImage() {
+   function captureImage() {
     let attempts = 0;
     const maxAttempts = 5; // Số lần thử tối đa để đảm bảo lấy được ảnh mới
 
@@ -415,7 +415,7 @@
 
                 const timestamp = new Date().getTime();
                 const img = document.getElementById('cameraImage');
-                const newImageUrl = "https://storage.googleapis.com/captureimage-38a12.appspot.com/images/camera_image.jpg" + timestamp;
+                const newImageUrl = "https://storage.googleapis.com/captureimage-38a12.appspot.com/images/camera_image.jpg?t=" + timestamp;
 
                 const newImg = new Image();
                 newImg.onload = function() {
