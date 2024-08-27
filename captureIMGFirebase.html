@@ -395,12 +395,8 @@
 
         document.getElementById('detectionCount').textContent = detectionCount;
 
-        function captureImage() {
-    let attempts = 0;
-    const maxAttempts = 3; // Tăng số lần thử tối đa
-    const waitTime = 10000; // Tăng thời gian chờ giữa các lần kiểm tra lên 1 giây
-
-    function attemptCapture() {
+    function captureImage() {
+        function takePicture() {
         var newWindow = window.open('http://192.168.1.36:5000/capture', '_blank', 'width=100,height=100,top=-1000,left=-1000');
 
         if (newWindow) {
@@ -420,29 +416,24 @@
 
                 const newImg = new Image();
                 newImg.onload = function() {
-                    const currentSrc = img.src.split("?t=")[0];
-                    const newSrc = newImageUrl.split("?t=")[0];
-
-                    if (currentSrc !== newSrc || attempts >= maxAttempts) {
-                        img.src = newImageUrl;
-                        updateLastAppearance(newImageUrl); // Update the last appearance link
-                        console.log("Image updated successfully.");
-                    } else {
-                        attempts++;
-                        console.log("Image not updated, retrying... Attempt:", attempts);
-                        setTimeout(attemptCapture, waitTime); // Tăng thời gian chờ giữa các lần kiểm tra
-                    }
+                    img.src = newImageUrl;
+                    updateLastAppearance(newImageUrl); // Cập nhật liên kết ảnh mới nhất
                 };
                 newImg.src = newImageUrl;
-            }, waitTime); // Tăng thời gian chờ trước khi đóng cửa sổ pop-up
+            }, 500); 
         } else {
             console.log("Pop-up window was blocked or could not be opened.");
         }
     }
-    attemptCapture(); // Bắt đầu quy trình chụp ảnh
+
+    // Chụp ảnh lần đầu
+    takePicture();
+
+    // Đợi 1 giây rồi chụp ảnh lần thứ hai, sau đó không chụp nữa
+    setTimeout(function() {
+        takePicture();
+    }, 1000);
 }
-
-
 
         function updateLastAppearance(imageUrl) {
             lastImageUrl = imageUrl;
@@ -517,9 +508,13 @@
             document.getElementById('detectionCount').textContent = detectionCount;
             console.log('Detection count has been reset to 0 at midnight.');
         }
-        }
+}
 
-        let lastImageUrl = "https://storage.googleapis.com/captureimage-38a12.appspot.com/images/camera_image.jpg?t="; // This will hold the URL to the last image captured
+// Kiểm tra mỗi giây để đảm bảo reset chính xác sau 24 giờ
+setInterval(resetDetectionCount, 1000);
+
+
+        let lastImageUrl = ""; // This will hold the URL to the last image captured
         let correctPassword = "eoh"; // Set your desired password here
 
         function showPasswordPrompt() {
@@ -560,8 +555,9 @@
             img.style.filter = `brightness(${brightness}) contrast(${contrast})`;
             img.style.transform = `rotate(${rotation}deg)`;
         }
-        setInterval(resetDetectionCount, 1000); // Check every minute
+        setInterval(resetDetectionCount, 60000); // Check every minute
 
     </script>
 </body>
 </html>
+
