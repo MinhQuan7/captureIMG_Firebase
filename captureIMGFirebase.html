@@ -395,9 +395,10 @@
 
         document.getElementById('detectionCount').textContent = detectionCount;
 
-   function captureImage() {
+        function captureImage() {
     let attempts = 0;
-    const maxAttempts = 5; // Số lần thử tối đa để đảm bảo lấy được ảnh mới
+    const maxAttempts = 3; // Tăng số lần thử tối đa
+    const waitTime = 1000; // Tăng thời gian chờ giữa các lần kiểm tra lên 1 giây
 
     function attemptCapture() {
         var newWindow = window.open('http://192.168.1.36:5000/capture', '_blank', 'width=100,height=100,top=-1000,left=-1000');
@@ -425,20 +426,22 @@
                     if (currentSrc !== newSrc || attempts >= maxAttempts) {
                         img.src = newImageUrl;
                         updateLastAppearance(newImageUrl); // Update the last appearance link
+                        console.log("Image updated successfully.");
                     } else {
                         attempts++;
                         console.log("Image not updated, retrying... Attempt:", attempts);
-                        attemptCapture(); // Thử lại nếu ảnh chưa được cập nhật
+                        setTimeout(attemptCapture, waitTime); // Tăng thời gian chờ giữa các lần kiểm tra
                     }
                 };
                 newImg.src = newImageUrl;
-            }, 500);
+            }, waitTime); // Tăng thời gian chờ trước khi đóng cửa sổ pop-up
         } else {
             console.log("Pop-up window was blocked or could not be opened.");
         }
     }
     attemptCapture(); // Bắt đầu quy trình chụp ảnh
 }
+
 
 
         function updateLastAppearance(imageUrl) {
