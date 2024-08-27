@@ -420,7 +420,7 @@
                     updateLastAppearance(newImageUrl); // Cập nhật liên kết ảnh mới nhất
                 };
                 newImg.src = newImageUrl;
-            }, 500); 
+            },800); 
         } else {
             console.log("Pop-up window was blocked or could not be opened.");
         }
@@ -432,7 +432,7 @@
     // Đợi 1 giây rồi chụp ảnh lần thứ hai, sau đó không chụp nữa
     setTimeout(function() {
         takePicture();
-    }, 1000);
+    }, 1500);
 }
 
         function updateLastAppearance(imageUrl) {
