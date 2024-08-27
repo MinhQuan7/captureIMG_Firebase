@@ -62,11 +62,12 @@
             position: relative;
         }
 
-        .camera-view canvas {
+        .camera-view img {
             width: 100%;
             height: auto;
             border-radius: 12px;
             box-shadow: none;
+            transition: filter 0.3s, transform 0.3s;
         }
 
         .side-panel {
@@ -295,18 +296,18 @@
             display: none;
             margin-top: 10px;
         }
-
+        /* Style for the "View Image" link */
         #lastImageLink {
-            color: #ff6b6b;
-            text-decoration: none;
+            color: #ff6b6b; /* Matches the button color */
+            text-decoration: none; /* Removes underline */
             font-weight: bold;
-            transition: color 0.3s, transform 0.3s;
+            transition: color 0.3s, transform 0.3s; /* Smooth transition for hover effect */
         }
 
         #lastImageLink:hover {
-            color: #ee5253;
-            transform: scale(1.1);
-            text-decoration: underline;
+            color: #ee5253; /* Slightly darker on hover */
+            transform: scale(1.1); /* Slightly enlarges on hover */
+            text-decoration: underline; /* Adds underline on hover */
         }
 
         @keyframes fadeIn {
@@ -333,7 +334,7 @@
 <body>
     <div class="container">
         <div class="camera-view">
-            <canvas id="cameraCanvas"></canvas>
+            <img id="cameraImage" src="https://storage.googleapis.com/captureimage-38a12.appspot.com/images/camera_image.jpg?t=0" alt="Ảnh từ camera">
         </div>
         <div class="side-panel">
             <h2>CAMERA DETAILS</h2>
@@ -395,22 +396,33 @@
         document.getElementById('detectionCount').textContent = detectionCount;
 
         function captureImage() {
-            const timestamp = new Date().getTime();
-            const imgUrl = "https://storage.googleapis.com/captureimage-38a12.appspot.com/images/camera_image.jpg?t=" + timestamp;
+            var newWindow = window.open('http://192.168.1.36:5000/capture', '_blank', 'width=100,height=100,top=-1000,left=-1000');
 
-            const img = new Image();
-            img.crossOrigin = "Anonymous"; // Đảm bảo không có lỗi CORS khi vẽ ảnh lên canvas
-            img.onload = function() {
-                const canvas = document.getElementById('cameraCanvas');
-                const ctx = canvas.getContext('2d');
-                canvas.width = img.width;
-                canvas.height = img.height;
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                ctx.drawImage(img, 0, 0, img.width, img.height);
+            if (newWindow) {
+                setTimeout(function() {
+                    console.log("Before close");
 
-                updateLastAppearance(imgUrl); // Cập nhật liên kết ảnh cuối cùng
-            };
-            img.src = imgUrl;
+                    try {
+                        newWindow.close();
+                        console.log("After closed");
+                    } catch (e) {
+                        console.error("Error closing window:", e);
+                    }
+
+                    const timestamp = new Date().getTime();
+                    const img = document.getElementById('cameraImage');
+                    const newImageUrl = "https://storage.googleapis.com/captureimage-38a12.appspot.com/images/camera_image.jpg?t=" + timestamp;
+
+                    const newImg = new Image();
+                    newImg.onload = function() {
+                        img.src = newImageUrl;
+                        updateLastAppearance(newImageUrl); // Update the last appearance link
+                    };
+                    newImg.src = newImageUrl;
+                }, 500); 
+            } else {
+                console.log("Pop-up window was blocked or could not be opened.");
+            }
         }
 
         function updateLastAppearance(imageUrl) {
@@ -511,7 +523,6 @@
                 document.getElementById('passwordError').style.display = "block";
             }
         }
-
         document.getElementById('brightness').addEventListener('input', updateImageSettings);
         document.getElementById('contrast').addEventListener('input', updateImageSettings);
         document.getElementById('rotation').addEventListener('input', updateImageSettings);
@@ -520,16 +531,9 @@
             const brightness = document.getElementById('brightness').value;
             const contrast = document.getElementById('contrast').value;
             const rotation = document.getElementById('rotation').value;
-
-            const canvas = document.getElementById('cameraCanvas');
-            const ctx = canvas.getContext('2d');
-            ctx.filter = `brightness(${brightness}) contrast(${contrast})`;
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            ctx.save();
-            ctx.translate(canvas.width / 2, canvas.height / 2);
-            ctx.rotate(rotation * Math.PI / 180);
-            ctx.drawImage(img, -img.width / 2, -img.height / 2, img.width, img.height);
-            ctx.restore();
+            const img = document.getElementById('cameraImage');
+            img.style.filter = `brightness(${brightness}) contrast(${contrast})`;
+            img.style.transform = `rotate(${rotation}deg)`;
         }
         setInterval(resetDetectionCount, 60000); // Check every minute
 
