@@ -1,11 +1,10 @@
+from flask import Flask, jsonify
 import requests
 import firebase_admin
 from firebase_admin import credentials, storage
-from flask import Flask, jsonify
 
 # Khởi tạo Firebase Admin SDK
 cred = credentials.Certificate("F:/EoH Company/Capture_Image_iFrame/firebase/pythoncodeCaptureIMG_Camera/captureimage-38a12-firebase-adminsdk-ngvh0-e14c26be77.json")
-
 
 firebase_admin.initialize_app(cred, {
     'storageBucket': 'captureimage-38a12.appspot.com'  #projectID
@@ -44,6 +43,12 @@ def capture_and_upload_image():
 # Khởi tạo ứng dụng Flask
 app = Flask(__name__)
 
+# Định nghĩa route gốc "/"
+@app.route('/', methods=['GET'])
+def home():
+    return jsonify({"message": "Welcome to the camera capture API!"})
+
+# Định nghĩa route "/capture" để chụp ảnh
 @app.route('/capture', methods=['GET'])
 def capture_image():
     try:
