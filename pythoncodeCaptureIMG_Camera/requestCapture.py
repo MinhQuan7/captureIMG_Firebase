@@ -4,7 +4,7 @@ import firebase_admin
 from firebase_admin import credentials, storage
 
 # Khởi tạo Firebase Admin SDK
-cred = credentials.Certificate("F:/EoH Company/Capture_Image_iFrame/firebase/pythoncodeCaptureIMG_Camera/captureimage-38a12-firebase-adminsdk-ngvh0-e14c26be77.json")
+cred = credentials.Certificate("F:/EoH Company/Capture_Image_iFrame/firebase/pythoncodeCaptureIMG_Camera/captureimage-38a12-firebase-adminsdk-ngvh0-4e19f413ec.json")
 
 firebase_admin.initialize_app(cred, {
     'storageBucket': 'captureimage-38a12.appspot.com'  #projectID
@@ -14,7 +14,7 @@ def capture_and_upload_image():
     try:
         # Tải ảnh từ HIKVISION
         url = "http://admin:Eoh54321@14.241.233.207:28001/ISAPI/Streaming/channels/1/picture"
-        response = requests.get(url, timeout=10)
+        response = requests.get(url, timeout=7)
 
         # In trạng thái phản hồi
         print("HTTP Status Code từ camera:", response.status_code)
